@@ -1,4 +1,6 @@
-# Prirodne nepogode iz satelita: geografska procjena šteta na poljoprivrednim parcelama
+# Geografija okoliša u službi zajednice
+
+*Prirodne prijetnje, daljinska istraživanja i procjena šteta iz otvorenih podataka*
 
 Web aplikacija za procjenu štete od prirodnih nepogoda na poljoprivrednim (ARKOD) parcelama iz satelitskih snimaka Copernicus. Obrađena su dva događaja, a između njih se bira jednim klikom:
 
