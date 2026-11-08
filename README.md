@@ -35,7 +35,7 @@ src/             izvorni HTML; build.py ga sastavlja u docs/index.html
 Lokalno:
 
 ```
-cd site
+cd docs
 python -m http.server 8000
 ```
 
