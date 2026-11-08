@@ -1,0 +1,1087 @@
+<!doctype html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Satelitska procjena šteta</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Procjena poplavljenosti i štete na ARKOD parcelama iz radarskih snimaka Sentinel-1, poplava Kupe i Korane, svibanj 2023.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+ .leaflet-pane, .leaflet-tile, .leaflet-marker-icon, .leaflet-marker-shadow, .leaflet-tile-container, .leaflet-pane > svg, .leaflet-pane > canvas, .leaflet-zoom-box, .leaflet-image-layer, .leaflet-layer { position: absolute; left: 0; top: 0; } .leaflet-container { overflow: hidden; } .leaflet-tile, .leaflet-marker-icon, .leaflet-marker-shadow { -webkit-user-select: none; -moz-user-select: none; user-select: none; -webkit-user-drag: none; } .leaflet-tile::selection { background: transparent; } .leaflet-safari .leaflet-tile { image-rendering: -webkit-optimize-contrast; } .leaflet-safari .leaflet-tile-container { width: 1600px; height: 1600px; -webkit-transform-origin: 0 0; } .leaflet-marker-icon, .leaflet-marker-shadow { display: block; } .leaflet-container .leaflet-overlay-pane svg { max-width: none !important; max-height: none !important; } .leaflet-container .leaflet-marker-pane img, .leaflet-container .leaflet-shadow-pane img, .leaflet-container .leaflet-tile-pane img, .leaflet-container img.leaflet-image-layer, .leaflet-container .leaflet-tile { max-width: none !important; max-height: none !important; width: auto; padding: 0; } .leaflet-container img.leaflet-tile { mix-blend-mode: plus-lighter; } .leaflet-container.leaflet-touch-zoom { -ms-touch-action: pan-x pan-y; touch-action: pan-x pan-y; } .leaflet-container.leaflet-touch-drag { -ms-touch-action: pinch-zoom; touch-action: none; touch-action: pinch-zoom; } .leaflet-container.leaflet-touch-drag.leaflet-touch-zoom { -ms-touch-action: none; touch-action: none; } .leaflet-container { -webkit-tap-highlight-color: transparent; } .leaflet-container a { -webkit-tap-highlight-color: rgba(51, 181, 229, 0.4); } .leaflet-tile { filter: inherit; visibility: hidden; } .leaflet-tile-loaded { visibility: inherit; } .leaflet-zoom-box { width: 0; height: 0; -moz-box-sizing: border-box; box-sizing: border-box; z-index: 800; } .leaflet-overlay-pane svg { -moz-user-select: none; } .leaflet-pane { z-index: 400; } .leaflet-tile-pane { z-index: 200; } .leaflet-overlay-pane { z-index: 400; } .leaflet-shadow-pane { z-index: 500; } .leaflet-marker-pane { z-index: 600; } .leaflet-tooltip-pane { z-index: 650; } .leaflet-popup-pane { z-index: 700; } .leaflet-map-pane canvas { z-index: 100; } .leaflet-map-pane svg { z-index: 200; } .leaflet-vml-shape { width: 1px; height: 1px; } .lvml { behavior: url(#default#VML); display: inline-block; position: absolute; } .leaflet-control { position: relative; z-index: 800; pointer-events: visiblePainted; pointer-events: auto; } .leaflet-top, .leaflet-bottom { position: absolute; z-index: 1000; pointer-events: none; } .leaflet-top { top: 0; } .leaflet-right { right: 0; } .leaflet-bottom { bottom: 0; } .leaflet-left { left: 0; } .leaflet-control { float: left; clear: both; } .leaflet-right .leaflet-control { float: right; } .leaflet-top .leaflet-control { margin-top: 10px; } .leaflet-bottom .leaflet-control { margin-bottom: 10px; } .leaflet-left .leaflet-control { margin-left: 10px; } .leaflet-right .leaflet-control { margin-right: 10px; } .leaflet-fade-anim .leaflet-popup { opacity: 0; -webkit-transition: opacity 0.2s linear; -moz-transition: opacity 0.2s linear; transition: opacity 0.2s linear; } .leaflet-fade-anim .leaflet-map-pane .leaflet-popup { opacity: 1; } .leaflet-zoom-animated { -webkit-transform-origin: 0 0; -ms-transform-origin: 0 0; transform-origin: 0 0; } svg.leaflet-zoom-animated { will-change: transform; } .leaflet-zoom-anim .leaflet-zoom-animated { -webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1); -moz-transition: -moz-transform 0.25s cubic-bezier(0,0,0.25,1); transition: transform 0.25s cubic-bezier(0,0,0.25,1); } .leaflet-zoom-anim .leaflet-tile, .leaflet-pan-anim .leaflet-tile { -webkit-transition: none; -moz-transition: none; transition: none; } .leaflet-zoom-anim .leaflet-zoom-hide { visibility: hidden; } .leaflet-interactive { cursor: pointer; } .leaflet-grab { cursor: -webkit-grab; cursor: -moz-grab; cursor: grab; } .leaflet-crosshair, .leaflet-crosshair .leaflet-interactive { cursor: crosshair; } .leaflet-popup-pane, .leaflet-control { cursor: auto; } .leaflet-dragging .leaflet-grab, .leaflet-dragging .leaflet-grab .leaflet-interactive, .leaflet-dragging .leaflet-marker-draggable { cursor: move; cursor: -webkit-grabbing; cursor: -moz-grabbing; cursor: grabbing; } .leaflet-marker-icon, .leaflet-marker-shadow, .leaflet-image-layer, .leaflet-pane > svg path, .leaflet-tile-container { pointer-events: none; } .leaflet-marker-icon.leaflet-interactive, .leaflet-image-layer.leaflet-interactive, .leaflet-pane > svg path.leaflet-interactive, svg.leaflet-image-layer.leaflet-interactive path { pointer-events: visiblePainted; pointer-events: auto; } .leaflet-container { background: #ddd; outline-offset: 1px; } .leaflet-container a { color: #0078A8; } .leaflet-zoom-box { border: 2px dotted #38f; background: rgba(255,255,255,0.5); } .leaflet-container { font-family: "Helvetica Neue", Arial, Helvetica, sans-serif; font-size: 12px; font-size: 0.75rem; line-height: 1.5; } .leaflet-bar { box-shadow: 0 1px 5px rgba(0,0,0,0.65); border-radius: 4px; } .leaflet-bar a { background-color: #fff; border-bottom: 1px solid #ccc; width: 26px; height: 26px; line-height: 26px; display: block; text-align: center; text-decoration: none; color: black; } .leaflet-bar a, .leaflet-control-layers-toggle { background-position: 50% 50%; background-repeat: no-repeat; display: block; } .leaflet-bar a:hover, .leaflet-bar a:focus { background-color: #f4f4f4; } .leaflet-bar a:first-child { border-top-left-radius: 4px; border-top-right-radius: 4px; } .leaflet-bar a:last-child { border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; border-bottom: none; } .leaflet-bar a.leaflet-disabled { cursor: default; background-color: #f4f4f4; color: #bbb; } .leaflet-touch .leaflet-bar a { width: 30px; height: 30px; line-height: 30px; } .leaflet-touch .leaflet-bar a:first-child { border-top-left-radius: 2px; border-top-right-radius: 2px; } .leaflet-touch .leaflet-bar a:last-child { border-bottom-left-radius: 2px; border-bottom-right-radius: 2px; } .leaflet-control-zoom-in, .leaflet-control-zoom-out { font: bold 18px 'Lucida Console', Monaco, monospace; text-indent: 1px; } .leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out { font-size: 22px; } .leaflet-control-layers { box-shadow: 0 1px 5px rgba(0,0,0,0.4); background: #fff; border-radius: 5px; } .leaflet-control-layers-toggle { background-image: url(images/layers.png); width: 36px; height: 36px; } .leaflet-retina .leaflet-control-layers-toggle { background-image: url(images/layers-2x.png); background-size: 26px 26px; } .leaflet-touch .leaflet-control-layers-toggle { width: 44px; height: 44px; } .leaflet-control-layers .leaflet-control-layers-list, .leaflet-control-layers-expanded .leaflet-control-layers-toggle { display: none; } .leaflet-control-layers-expanded .leaflet-control-layers-list { display: block; position: relative; } .leaflet-control-layers-expanded { padding: 6px 10px 6px 6px; color: #333; background: #fff; } .leaflet-control-layers-scrollbar { overflow-y: scroll; overflow-x: hidden; padding-right: 5px; } .leaflet-control-layers-selector { margin-top: 2px; position: relative; top: 1px; } .leaflet-control-layers label { display: block; font-size: 13px; font-size: 1.08333em; } .leaflet-control-layers-separator { height: 0; border-top: 1px solid #ddd; margin: 5px -10px 5px -6px; } .leaflet-default-icon-path { background-image: url(images/marker-icon.png); } .leaflet-container .leaflet-control-attribution { background: #fff; background: rgba(255, 255, 255, 0.8); margin: 0; } .leaflet-control-attribution, .leaflet-control-scale-line { padding: 0 5px; color: #333; line-height: 1.4; } .leaflet-control-attribution a { text-decoration: none; } .leaflet-control-attribution a:hover, .leaflet-control-attribution a:focus { text-decoration: underline; } .leaflet-attribution-flag { display: inline !important; vertical-align: baseline !important; width: 1em; height: 0.6669em; } .leaflet-left .leaflet-control-scale { margin-left: 5px; } .leaflet-bottom .leaflet-control-scale { margin-bottom: 5px; } .leaflet-control-scale-line { border: 2px solid #777; border-top: none; line-height: 1.1; padding: 2px 5px 1px; white-space: nowrap; -moz-box-sizing: border-box; box-sizing: border-box; background: rgba(255, 255, 255, 0.8); text-shadow: 1px 1px #fff; } .leaflet-control-scale-line:not(:first-child) { border-top: 2px solid #777; border-bottom: none; margin-top: -2px; } .leaflet-control-scale-line:not(:first-child):not(:last-child) { border-bottom: 2px solid #777; } .leaflet-touch .leaflet-control-attribution, .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar { box-shadow: none; } .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar { border: 2px solid rgba(0,0,0,0.2); background-clip: padding-box; } .leaflet-popup { position: absolute; text-align: center; margin-bottom: 20px; } .leaflet-popup-content-wrapper { padding: 1px; text-align: left; border-radius: 12px; } .leaflet-popup-content { margin: 13px 24px 13px 20px; line-height: 1.3; font-size: 13px; font-size: 1.08333em; min-height: 1px; } .leaflet-popup-content p { margin: 17px 0; margin: 1.3em 0; } .leaflet-popup-tip-container { width: 40px; height: 20px; position: absolute; left: 50%; margin-top: -1px; margin-left: -20px; overflow: hidden; pointer-events: none; } .leaflet-popup-tip { width: 17px; height: 17px; padding: 1px; margin: -10px auto 0; pointer-events: auto; -webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); transform: rotate(45deg); } .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: white; color: #333; box-shadow: 0 3px 14px rgba(0,0,0,0.4); } .leaflet-container a.leaflet-popup-close-button { position: absolute; top: 0; right: 0; border: none; text-align: center; width: 24px; height: 24px; font: 16px/24px Tahoma, Verdana, sans-serif; color: #757575; text-decoration: none; background: transparent; } .leaflet-container a.leaflet-popup-close-button:hover, .leaflet-container a.leaflet-popup-close-button:focus { color: #585858; } .leaflet-popup-scrolled { overflow: auto; } .leaflet-oldie .leaflet-popup-content-wrapper { -ms-zoom: 1; } .leaflet-oldie .leaflet-popup-tip { width: 24px; margin: 0 auto; -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)"; filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678); } .leaflet-oldie .leaflet-control-zoom, .leaflet-oldie .leaflet-control-layers, .leaflet-oldie .leaflet-popup-content-wrapper, .leaflet-oldie .leaflet-popup-tip { border: 1px solid #999; } .leaflet-div-icon { background: #fff; border: 1px solid #666; } .leaflet-tooltip { position: absolute; padding: 6px; background-color: #fff; border: 1px solid #fff; border-radius: 3px; color: #222; white-space: nowrap; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; pointer-events: none; box-shadow: 0 1px 3px rgba(0,0,0,0.4); } .leaflet-tooltip.leaflet-interactive { cursor: pointer; pointer-events: auto; } .leaflet-tooltip-top:before, .leaflet-tooltip-bottom:before, .leaflet-tooltip-left:before, .leaflet-tooltip-right:before { position: absolute; pointer-events: none; border: 6px solid transparent; background: transparent; content: ""; } .leaflet-tooltip-bottom { margin-top: 6px; } .leaflet-tooltip-top { margin-top: -6px; } .leaflet-tooltip-bottom:before, .leaflet-tooltip-top:before { left: 50%; margin-left: -6px; } .leaflet-tooltip-top:before { bottom: 0; margin-bottom: -12px; border-top-color: #fff; } .leaflet-tooltip-bottom:before { top: 0; margin-top: -12px; margin-left: -6px; border-bottom-color: #fff; } .leaflet-tooltip-left { margin-left: -6px; } .leaflet-tooltip-right { margin-left: 6px; } .leaflet-tooltip-left:before, .leaflet-tooltip-right:before { top: 50%; margin-top: -6px; } .leaflet-tooltip-left:before { right: 0; margin-right: -12px; border-left-color: #fff; } .leaflet-tooltip-right:before { left: 0; margin-left: -12px; border-right-color: #fff; } @media print { .leaflet-control { -webkit-print-color-adjust: exact; print-color-adjust: exact; } } 
+/* Layout: karta preko cijelog zaslona, desni panel kao "terenska bilježnica" s karticama; na mobitelu panel ide dolje. */
+:root{
+  --home-bg:#0b1a22;--home-ink:#eef4f6;--home-muted:#a9bcc6;--home-line:#25404d;--home-card:#10242e;--home-acc:#5fd0e8;
+  --bg:#eef1f3; --panel:#fbfcfc; --ink:#12212b; --muted:#5a6b76; --line:#d5dde2;
+  --accent:#0b6e8a; --accent-ink:#ffffff; --water:#19b6d8; --soft:#e3ecf0;
+  --c1:#ffe08a; --c2:#fdae61; --c3:#ec5b38; --c4:#a1123a;
+  --ok:#2e7d4f; --warn:#b26a00;
+  --f-display:"Schibsted Grotesk", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Schibsted Grotesk", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --panel-w:410px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0c1419; --panel:#121d24; --ink:#e4ecef; --muted:#93a6b1; --line:#24343e;
+  --accent:#3fb6d4; --accent-ink:#04161d; --water:#2fd0f0; --soft:#1a2a33;
+  --ok:#5cc28a; --warn:#e3a33b; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0c1419; --panel:#121d24; --ink:#e4ecef; --muted:#93a6b1; --line:#24343e;
+  --accent:#3fb6d4; --accent-ink:#04161d; --water:#2fd0f0; --soft:#1a2a33;
+  --ok:#5cc28a; --warn:#e3a33b; color-scheme:dark }
+[hidden]{display:none!important}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.45;overflow:hidden}
+.app{position:fixed;inset:0;display:grid;grid-template-columns:1fr var(--panel-w);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+#map{position:relative;min-width:0;background:#0d1418}
+.leaflet-container{font-family:var(--f-body);background:#0d1418}
+aside{background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0;min-width:0;padding-right:env(safe-area-inset-right,0px)}
+header.brand{padding:14px 18px 10px;border-bottom:1px solid var(--line);display:grid;gap:4px}
+.brand .eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.brand h1{margin:0;font-family:var(--f-display);font-weight:800;font-size:21px;letter-spacing:-.01em;text-wrap:balance}
+.brand p{margin:0;color:var(--muted);font-size:12.5px}
+nav.tabs{display:flex;gap:2px;padding:0 10px;border-bottom:1px solid var(--line);overflow-x:auto}
+nav.tabs button{appearance:none;border:0;background:none;color:var(--muted);font:600 13px var(--f-body);padding:10px 10px 9px;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+nav.tabs button:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tabpanes{flex:1;overflow-y:auto;min-height:0}
+section.pane{padding:16px 18px 28px;display:grid;gap:16px;align-content:start}
+h2{margin:0;font:700 15px var(--f-display);letter-spacing:-.005em}
+h3{margin:0;font:600 12px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi{background:var(--soft);border-radius:6px;padding:10px 12px;display:grid;gap:2px}
+.kpi .v{font:600 20px var(--f-mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi.big{grid-column:1/-1;background:var(--accent);color:var(--accent-ink)}
+.kpi.big .l{color:inherit;opacity:.85}
+.kpi.big .v{font-size:27px}
+.seg{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg button{flex:1;appearance:none;border:0;background:var(--panel);color:var(--ink);font:600 12.5px var(--f-body);padding:7px 4px;cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--panel)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{text-align:left;padding:6px 4px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font:600 11px var(--f-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+td.n,th.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.tablewrap{overflow-x:auto}
+.bars{display:grid;gap:6px}
+.bar{display:grid;grid-template-columns:86px 1fr 70px;gap:8px;align-items:center;font-size:12.5px}
+.bar .track{height:12px;background:var(--soft);border-radius:3px;overflow:hidden}
+.bar .fill{height:100%}
+.bar .n{font-family:var(--f-mono);text-align:right;font-variant-numeric:tabular-nums}
+.sw{display:inline-block;width:11px;height:11px;border-radius:2px;vertical-align:-1px;margin-right:6px;border:1px solid rgba(0,0,0,.25)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{text-decoration:none;display:inline-block;appearance:none;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:600 13px var(--f-body);padding:8px 12px;border-radius:6px;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:hover{border-color:var(--accent)}
+.note{font-size:12px;color:var(--muted)}
+.note b{color:var(--ink)}
+input[type=number],input[type=search],select{font:500 13px var(--f-mono);color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:5px;padding:5px 6px;width:100%;min-width:0}
+input[type=number]{text-align:right;font-variant-numeric:tabular-nums}
+.prices td{padding:5px 3px}
+.prices input{width:74px}
+.prices select{width:100%}
+dl.facts{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;margin:0;font-size:13px}
+dl.facts dt{color:var(--muted)}
+dl.facts dd{margin:0;font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:right}
+.formula{font:500 12.5px/1.6 var(--f-mono);background:var(--soft);border-radius:6px;padding:10px 12px;overflow-x:auto}
+.pill{display:inline-block;font:600 11px var(--f-mono);padding:2px 7px;border-radius:999px;color:#1b1b1b}
+.empty{border:1px dashed var(--line);border-radius:8px;padding:18px;color:var(--muted);text-align:center}
+.slider{display:grid;grid-template-columns:1fr 70px;gap:4px 10px;align-items:center}
+.slider label{font-size:13px}
+.slider output{font:600 13px var(--f-mono);text-align:right}
+.slider input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--accent)}
+canvas.hist{width:100%;height:120px;display:block;background:var(--soft);border-radius:6px}
+canvas.sig{width:100%;height:110px;display:block;background:var(--soft);border-radius:6px}
+.steps{margin:0;padding-left:18px;display:grid;gap:6px}
+.method p{margin:0}
+.method a{color:var(--accent)}
+/* map UI */
+.mapbar{position:absolute;z-index:500;top:calc(10px + env(safe-area-inset-top,0px));left:calc(10px + env(safe-area-inset-left,0px));display:grid;gap:8px;max-width:min(330px,calc(100% - 20px))}
+.card{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.18);padding:10px 12px}
+.card h3{margin-bottom:6px}
+.lyr{display:grid;gap:3px;font-size:12.5px}
+.lyr label{display:flex;gap:7px;align-items:center;cursor:pointer}
+.lyr select{font-family:var(--f-body)}
+.lyr h4{margin:8px 0 1px;font:600 10.5px var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--accent)}
+/* naslovnica */
+.home{position:fixed;inset:0;z-index:1000;overflow-y:auto;background:var(--home-bg);color:var(--home-ink);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.home-in{max-width:1120px;margin:0 auto;padding-block:28px 40px;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));display:grid;gap:30px}
+.home-top{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.home-top img{width:84px;height:84px;flex:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
+.home-top .inst{display:grid;gap:2px;font-size:14px;line-height:1.35}
+.home-top .inst b{font-weight:700;font-size:15px}
+.home-top .team{margin-left:auto;font:700 13px var(--f-mono);letter-spacing:.08em;border:1px solid var(--home-line);border-radius:999px;padding:7px 14px}
+.home-hero{display:grid;gap:12px;max-width:820px}
+.home-hero .ev{font:600 12px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--home-acc)}
+.home-hero h1{margin:0;font:800 clamp(34px,5.4vw,60px)/1.02 var(--f-display);letter-spacing:-.025em;text-wrap:balance}
+.home-hero p{margin:0;font-size:17px;line-height:1.55;color:var(--home-muted);max-width:66ch}
+.home-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--home-line);border-bottom:1px solid var(--home-line)}
+.home-steps div{padding:14px 14px 14px 0;display:grid;gap:3px;font-size:13px;color:var(--home-muted)}
+.home-steps b{font:600 12px var(--f-mono);letter-spacing:.06em;color:var(--home-ink);text-transform:uppercase}
+.home-cards{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.hcard{appearance:none;border:1px solid var(--home-line);border-radius:12px;overflow:hidden;background:var(--home-card);color:inherit;text-align:left;cursor:pointer;display:grid;grid-template-rows:200px auto;padding:0;font:inherit;transition:transform .15s,border-color .15s}
+.hcard:hover,.hcard:focus-visible{transform:translateY(-2px);border-color:var(--home-acc);outline:none}
+.hcard .img{background-size:cover;background-position:center;position:relative}
+.hcard .img span{position:absolute;left:14px;top:14px;font:700 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;background:rgba(8,16,20,.75);color:#fff;padding:5px 9px;border-radius:999px}
+.hcard .body{padding:16px 18px 18px;display:grid;gap:10px}
+.hcard h2{margin:0;font:800 26px var(--f-display);letter-spacing:-.015em}
+.hcard .sub{font-size:14px;color:var(--home-muted)}
+.hcard .nums{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;border-top:1px solid var(--home-line);padding-top:10px}
+.hcard .nums div{display:grid;gap:1px}
+.hcard .nums b{font:600 19px var(--f-mono);font-variant-numeric:tabular-nums}
+.hcard .nums small{font-size:11.5px;color:var(--home-muted)}
+.hcard .go{font:600 13px var(--f-mono);color:var(--home-acc)}
+.home-foot{display:flex;gap:10px 24px;flex-wrap:wrap;font-size:12.5px;color:var(--home-muted);border-top:1px solid var(--home-line);padding-top:14px}
+@media (max-width:820px){.home-cards{grid-template-columns:1fr}.home-steps{grid-template-columns:1fr 1fr}.home-top .team{margin-left:0}}
+.homebtn{appearance:none;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:4px 9px;font:600 12px var(--f-mono);cursor:pointer;justify-self:start}
+/* pouzdanost */
+table.cm{width:auto;border-collapse:collapse;font-size:12.5px}
+table.cm td,table.cm th{border:1px solid var(--line);padding:6px 9px;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+table.cm th{text-transform:none;letter-spacing:0;font-size:11.5px;color:var(--muted);text-align:center;font-weight:600}
+table.cm td.ok{background:color-mix(in srgb,var(--ok) 18%,transparent)}
+table.cm td.bad{background:color-mix(in srgb,#ec5b38 14%,transparent)}
+.metrics{display:flex;flex-wrap:wrap;gap:6px}
+.metrics span{font:600 12px var(--f-mono);background:var(--soft);border-radius:999px;padding:4px 10px}
+.legend{position:absolute;z-index:500;bottom:calc(22px + env(safe-area-inset-bottom,0px));left:calc(10px + env(safe-area-inset-left,0px));font-size:12px}
+.legend .items{display:grid;gap:3px}
+.search{display:flex;gap:6px}
+.toast{position:absolute;z-index:600;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--panel);padding:8px 14px;border-radius:6px;font-size:13px}
+.loading{position:absolute;inset:0;z-index:700;display:grid;place-items:center;background:rgba(10,18,22,.65);color:#e4ecef;font:600 14px var(--f-mono)}
+.collapse-btn{display:none}
+body[data-hz="tuca"] .only-flood{display:none!important}
+body:not([data-hz="tuca"]) .only-hail{display:none!important}
+.hz{display:flex;gap:6px;margin-top:4px}
+.hz button{flex:1;appearance:none;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:7px 8px;font:600 13px var(--f-body);cursor:pointer;text-align:left;display:grid;gap:1px}
+.hz button small{font:500 11px var(--f-mono);color:var(--muted)}
+.hz button[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.swipe-line{position:absolute;z-index:450;top:0;bottom:0;width:3px;margin-left:-1px;background:#fff;box-shadow:0 0 6px rgba(0,0,0,.6);pointer-events:none}
+.swipe-ctl{position:absolute;z-index:520;left:50%;transform:translateX(-50%);bottom:calc(46px + env(safe-area-inset-bottom,0px));width:min(420px,calc(100% - 40px));display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;font:600 12px var(--f-mono)}
+.swipe-ctl input{width:100%;accent-color:var(--accent)}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:820px){
+  .app{grid-template-columns:1fr;grid-template-rows:55% 45%}
+  aside{border-left:0;border-top:1px solid var(--line)}
+  .mapbar{max-width:calc(100% - 20px)}
+  .legend{display:none}
+  header.brand{padding:10px max(16px,env(safe-area-inset-left,0px)) 8px}
+  section.pane{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .lyr-more{display:none}
+  .lyr-more.open{display:grid}
+  .collapse-btn{display:inline-block}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+
+<section class="home" id="home" aria-label="Naslovnica">
+  <div class="home-in">
+    <div class="home-top">
+      <img src="data/logo_geo.png" alt="Logo Geografskog odsjeka PMF-a">
+      <div class="inst"><b>Sveučilište u Zagrebu</b><span>Prirodoslovno-matematički fakultet</span><span>Geografski odsjek</span></div>
+      <span class="team">GEOtim2</span>
+    </div>
+    <div class="home-hero">
+      <span class="ev">Datathon Portala otvorenih podataka 2026 · Izazov B: Okoliš i održivi prostor</span>
+      <h1>Satelitska procjena šteta od prirodnih nepogoda</h1>
+      <p>Iz otvorenih snimaka satelita Copernicus izdvajamo područje pogođeno nepogodom, presijecamo ga s ARKOD parcelama i za svaku parcelu računamo štetu po cijenama iz Registra šteta. Rezultat je zbroj po jedinici lokalne samouprave, spreman za povjerenstvo i terenski očevid.</p>
+    </div>
+    <div class="home-steps">
+      <div><b>1 · Snimka</b>Sentinel-1 (radar, kroz oblake) i Sentinel-2 (optika) prije i poslije događaja</div>
+      <div><b>2 · Detekcija</b>promjena povratnog signala i spektralnih indeksa, maska vode, žetve i oblaka</div>
+      <div><b>3 · Parcela</b>presjek s ARKOD-om, razred ili klasa štete, provjera neovisnim izvorima</div>
+      <div><b>4 · Šteta</b>površina × prinos × cijena × gubitak prinosa, zbroj po JLS-u, izvoz u CSV</div>
+    </div>
+    <div class="home-cards">
+      <button class="hcard" data-go="poplava">
+        <div class="img" style="background-image:linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(11,26,34,.85)),url(data/s2_20230522.webp)"><span>Sentinel-1 · Sentinel-2</span></div>
+        <div class="body">
+          <h2>Poplava</h2>
+          <span class="sub">Kupa i Korana, svibanj 2023. · Karlovac, Duga Resa, Barilović, Lasinja</span>
+          <div class="nums"><div><b id="hp_n">3.892</b><small>poplavljenih parcela</small></div><div><b id="hp_ha">845 ha</b><small>pod vodom</small></div><div><b id="hp_e">330 tis. €</b><small>procjena prema NDVI</small></div></div>
+          <span class="go">Otvori kartu poplave →</span>
+        </div>
+      </button>
+      <button class="hcard" data-go="tuca">
+        <div class="img" style="background-image:linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(11,26,34,.85)),url(data/tuca/s2_20240707.webp)"><span>Sentinel-2 · ESWD</span></div>
+        <div class="body">
+          <h2>Tuča</h2>
+          <span class="sub">1. 7. 2024. · Gradište, Županja, Štitar i pojas od 5 km</span>
+          <div class="nums"><div><b>987</b><small>oštećenih oranica</small></div><div><b>1.971 ha</b><small>u klasama 1–3</small></div><div><b>1,6 mil. €</b><small>procjena prema NDVI</small></div></div>
+          <span class="go">Otvori kartu tuče →</span>
+        </div>
+      </button>
+    </div>
+    <div class="home-foot"><span>Otvoreni podaci: Copernicus, ARKOD, DGU, Hrvatske vode, JRC, ESWD, Registar šteta</span><span>Otvoreni kod, licencija EUPL-1.2</span><span>Mentor: doc. dr. sc. Marin Mićunović</span></div>
+  </div>
+</section>
+<div class="app">
+  <div id="map">
+    <div class="mapbar">
+      <div class="card">
+        <div class="search">
+          <input id="q" type="search" placeholder="ARKOD ID, npr. 3593093" aria-label="Traži ARKOD parcelu">
+          <button class="btn" id="qbtn">Traži</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="row" style="justify-content:space-between"><h3 style="margin:0">Slojevi</h3><button class="btn collapse-btn" id="lyrToggle" style="padding:3px 8px">Prikaži</button></div>
+        <div class="lyr lyr-more" id="lyrMore" style="margin-top:6px">
+          <label for="base" class="note" style="display:block">Podloga</label>
+          <select id="base"></select>
+          <h4 class="only-flood">Poplava · radar Sentinel-1, 17. 5.</h4>
+          <label class="only-flood"><input type="checkbox" id="l_flood" checked> Obuhvat poplave</label>
+          <label class="only-flood"><input type="checkbox" id="l_fp" checked> Poplavljene ARKOD parcele (razred 1–4)</label>
+          <label class="only-flood"><input type="checkbox" id="l_thr"> Maska iz alata „Prag”</label>
+          <h4 class="only-flood">Nakon poplave · optika Sentinel-2, 22. 5.</h4>
+          <label class="only-flood"><input type="checkbox" id="l_dndvi"> Promjena vegetacije (NDVI 5. 5. → 22. 5.)</label>
+          <label class="only-flood"><input type="checkbox" id="l_s2w"> Voda i mokro tlo 22. 5.</label>
+          <label class="only-flood"><input type="checkbox" id="l_cloud"> Oblaci 22. 5. (bez podatka)</label>
+          <h4 class="only-flood">Ugroženost i granice</h4>
+          <label class="only-flood"><input type="checkbox" id="l_op"> Sve ARKOD parcele u području (33.224)</label>
+          <label class="only-flood"><input type="checkbox" id="l_riv"> Vodna tijela (Kupa, Korana, Dobra, Mrežnica)</label>
+          <h4 class="only-hail">Tuča · optika Sentinel-2, 22. 6. → 7. 7.</h4>
+          <label class="only-hail"><input type="checkbox" id="l_tpar" checked> ARKOD oranice po klasi štete</label>
+          <label class="only-hail"><input type="checkbox" id="l_pojas"> Pojas tuče (prag dNDVI)</label>
+          <label class="only-hail"><input type="checkbox" id="l_tdndvi"> Promjena NDVI bez žetve</label>
+          <h4 class="only-hail">Potvrda i granice</h4>
+          <label class="only-hail"><input type="checkbox" id="l_eswd" checked> Prijave tuče ESWD (1. 7. 2024.)</label>
+          <label><input type="checkbox" id="l_jls" checked> Granice JLS</label>
+          <button class="btn" id="swipeBtn" style="margin-top:6px">Usporedi prije / poslije</button>
+          <label for="colorby" class="note" style="display:block;margin-top:4px">Boja parcela</label>
+          <select id="colorby"><option value="r">Razred poplavljenosti</option><option value="e">Šteta po hektaru (€/ha)</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="legend card" id="legend"></div>
+    <div class="swipe-line" id="swipeLine" hidden></div>
+    <div class="swipe-ctl card" id="swipeCtl" hidden><span id="swL">5. 5.</span><input type="range" id="swipe" min="0" max="100" value="50" aria-label="Usporedba prije i poslije"><span id="swR">22. 5.</span></div>
+    <div class="loading" id="loading">Učitavanje podataka…</div>
+  </div>
+
+  <aside>
+    <header class="brand">
+      <div class="row" style="justify-content:space-between"><span class="eyebrow">GEOtim2 · Satelitska procjena šteta</span><button class="homebtn" id="homeBtn">← Naslovnica</button></div>
+      <div class="hz" id="hzSel">
+        <button data-hz="poplava" aria-pressed="true"><span>Poplava</span><small>Karlovac · svibanj 2023.</small></button>
+        <button data-hz="tuca" aria-pressed="false"><span>Tuča</span><small>Županja · 1. 7. 2024.</small></button>
+      </div>
+      <p id="hzDesc">Poplava Kupe i Korane, svibanj 2023. Karlovac, Duga Resa, Barilović, Lasinja i pojas od 3 km. Sentinel-1 i Sentinel-2.</p>
+    </header>
+    <nav class="tabs" role="tablist">
+      <button role="tab" aria-selected="true" data-tab="pregled">Pregled</button>
+      <button role="tab" aria-selected="false" data-tab="parcela">Parcela</button>
+      <button role="tab" aria-selected="false" data-tab="cijene">Cijene</button>
+      <button role="tab" aria-selected="false" data-tab="prag" class="only-flood">Prag</button>
+      <button role="tab" aria-selected="false" data-tab="pouzdanost">Pouzdanost</button>
+      <button role="tab" aria-selected="false" data-tab="metoda">Metoda</button>
+    </nav>
+    <div class="tabpanes">
+      <!-- PREGLED -->
+      <section class="pane" id="pane-pregled">
+        <div class="kpis">
+          <div class="kpi big"><span class="l">Procijenjena šteta na poljoprivrednim kulturama</span><span class="v" id="k_eur">–</span><span class="l" id="k_eur_sub"></span></div>
+          <div class="kpi"><span class="v" id="k_ha">–</span><span class="l" id="kl_ha">ha poplavljeno unutar ARKOD parcela</span></div>
+          <div class="kpi"><span class="v" id="k_n">–</span><span class="l" id="kl_n">pogođenih ARKOD parcela</span></div>
+          <div class="kpi"><span class="v" id="k_ext">–</span><span class="l" id="kl_ext">ha ukupni obuhvat poplave</span></div>
+          <div class="kpi"><span class="v" id="k_share">–</span><span class="l" id="kl_share">udio poplavljene ARKOD površine</span></div>
+        </div>
+        <div style="display:grid;gap:6px">
+          <h3 id="lossTitle">Gubitak prinosa na poplavljenom dijelu</h3>
+          <div class="seg" id="lossSeg">
+            <button data-loss="ndvi" aria-pressed="true">Prema NDVI</button>
+            <button data-loss="0.25" aria-pressed="false">25 %</button>
+            <button data-loss="0.5" aria-pressed="false">50 %</button>
+            <button data-loss="1" aria-pressed="false">100 %</button>
+          </div>
+          <p class="note only-flood">Šteta = poplavljena površina parcele × prinos × cijena × gubitak prinosa. <b>Prema NDVI</b> znači da se gubitak prinosa računa za svaku parcelu iz pada vegetacije na snimkama Sentinel-2 (5. 5. → 22. 5.) u odnosu na nepoplavljene parcele iste vrste. Za parcele pod oblacima i oranice koje su 5. 5. bile golo tlo uzima se 50 %. Prinosi i cijene mijenjaju se u kartici <b>Cijene i prinosi</b>.</p>
+        </div>
+        <div style="display:grid;gap:8px">
+          <h3 class="only-flood">Radar i optika se potvrđuju</h3>
+          <div class="bars only-flood" id="crossBars"></div>
+          <p class="note only-flood" id="crossNote"></p>
+          <p class="note only-hail">Šteta = površina parcele × prinos × cijena × gubitak prinosa, samo za parcele u klasama 1–3. <b>Prema NDVI</b> znači da se gubitak računa za svaku parcelu iz pada NDVI-ja (22. 6. → 7. 7. 2024.) u odnosu na oranice izvan pojasa tuče. Parcele požnjevene između dviju snimaka nisu ocijenjene.</p>
+          <h3 class="only-hail">Neovisna potvrda događaja</h3>
+          <p class="note only-hail" id="hailNote"></p>
+        </div>
+        <div style="display:grid;gap:8px">
+          <h3 id="classTitle">Parcele po razredu poplavljenosti</h3>
+          <div class="bars" id="classBars"></div>
+        </div>
+        <div style="display:grid;gap:8px">
+          <h3>Po jedinici lokalne samouprave</h3>
+          <div class="tablewrap"><table id="jlsTable"></table></div>
+          <p class="note">Zbroj po JLS odgovara načinu prijave u Registar šteta, gdje općinska i gradska povjerenstva unose štete.</p>
+        </div>
+        <div style="display:grid;gap:8px">
+          <h3 id="luTitle">Po vrsti uporabe zemljišta</h3>
+          <div class="tablewrap"><table id="luTable"></table></div>
+        </div>
+        <div style="display:grid;gap:8px">
+          <h3>Izvoz</h3>
+          <div class="row">
+            <button class="btn primary" id="dlCsv">Preuzmi CSV (sve pogođene parcele)</button>
+            <button class="btn" id="cpCsv">Kopiraj CSV</button>
+            <button class="btn" id="dlJls">CSV po JLS</button>
+          </div>
+          <textarea id="csvOut" hidden rows="5" style="width:100%;font:12px var(--f-mono)" aria-label="CSV za kopiranje"></textarea>
+        </div>
+      </section>
+
+      <!-- PARCELA -->
+      <section class="pane" id="pane-parcela" hidden>
+        <div id="parcelEmpty" class="empty">Kliknite parcelu na karti ili upišite ARKOD ID u tražilicu. Prikazat će se stanje parcele, satelitski potpis i izračun štete.</div>
+        <div id="parcelBox" hidden style="display:grid;gap:14px">
+          <div style="display:grid;gap:4px">
+            <span class="note" id="p_where"></span>
+            <h2 id="p_title"></h2>
+            <div id="p_pill"></div>
+          </div>
+          <dl class="facts" id="p_facts"></dl>
+          <div style="display:grid;gap:6px">
+            <h3>Šteta</h3>
+            <div class="formula" id="p_formula"></div>
+          </div>
+          <div style="display:grid;gap:6px" class="only-hail">
+            <h3>Spektralni indeksi parcele: 22. 6. i 7. 7. 2024.</h3>
+            <canvas class="sig" id="sigT" width="700" height="260" style="height:130px"></canvas>
+            <p class="note">Srednje vrijednosti indeksa na unutarnjem dijelu parcele (rub od 10 m isključen). Tuča kida i lomi lišće, pa padaju NDVI, NDRE i MSAVI2 (manje zelene biomase), pada NDMI (manje vode u listu), a rastu PSRI (stres, starenje) i BSI (više vidljivog tla).</p>
+          </div>
+          <div style="display:grid;gap:6px" class="only-flood">
+            <h3>Radarski potpis parcele (VV, dB)</h3>
+            <canvas class="sig" id="sig" width="700" height="220"></canvas>
+            <p class="note" id="sigNote">Srednja vrijednost povratnog raspršenja piksela unutar parcele. Pad na 17. 5. i oporavak do 29. 5. znak su privremenog plavljenja.</p>
+          </div>
+          <div style="display:grid;gap:6px" class="only-flood">
+            <h3>Vegetacija na parceli (Sentinel-2, NDVI)</h3>
+            <canvas class="sig" id="sig2" width="700" height="220"></canvas>
+            <dl class="facts" id="p_opt"></dl>
+            <p class="note" id="optNote"></p>
+          </div>
+          <div class="row"><button class="btn" id="zoomP">Približi parcelu</button><a class="btn" href="https://preglednik.arkod.hr/" target="_blank" rel="noopener">ARKOD preglednik</a><a class="btn" href="https://geoportal.dgu.hr/" target="_blank" rel="noopener">Geoportal DGU (katastar)</a></div>
+        </div>
+      </section>
+
+      <!-- CIJENE -->
+      <section class="pane" id="pane-cijene" hidden>
+        <p class="note">Cijene su iz <b>Prijedloga jedinstvenih cijena za potrebe Registra šteta od prirodnih nepogoda za razdoblje 1. 4. 2026. – 31. 3. 2027.</b> (izvori DZS i TISUP). Prinosi su prosječne vrijednosti za kontinentalnu Hrvatsku i služe kao početna pretpostavka. Sve vrijednosti možete mijenjati, a izračun se odmah osvježava.</p>
+        <div class="tablewrap"><table class="prices" id="priceTable"></table></div>
+        <div class="row"><button class="btn" id="resetPrices">Vrati početne vrijednosti</button><button class="btn" id="oldPrices">Cijene 2025./26. (kao u ArcGIS analizi)</button></div>
+        <p class="note">ARKOD bilježi vrstu uporabe (oranica, livada…), a ne usjev. Za oranice odaberite kulturu. Početni izbor je kukuruz: u svibnju je prevladavao na oranicama oko Karlovca, a početkom srpnja nepožnjevene oranice oko Županje uglavnom su pod kukuruzom, sojom i suncokretom.</p>
+      </section>
+
+      <!-- PRAG -->
+      <section class="pane" id="pane-prag" hidden>
+        <p class="note">Poplava je izdvojena pravilom nad radarskim snimkama Sentinel-1 (VV). Ovdje pravilo možete mijenjati i odmah vidjeti novi obuhvat na karti. Izračun se radi u pregledniku na rasteru od 40 m.</p>
+        <div class="slider"><label for="t1">VV za vrijeme poplave (17. 5.) manji od</label><output id="o1">−16 dB</output><input id="t1" type="range" min="-25" max="-8" step="0.5" value="-16"></div>
+        <div class="slider"><label for="t2">Promjena 5. 5. → 17. 5. manja od</label><output id="o2">−3 dB</output><input id="t2" type="range" min="-10" max="0" step="0.5" value="-3"></div>
+        <div class="slider"><label for="t3">Oporavak 17. 5. → 29. 5. veći od</label><output id="o3">+3 dB</output><input id="t3" type="range" min="0" max="10" step="0.5" value="3"></div>
+        <label style="display:flex;gap:8px;align-items:flex-start;font-size:13px"><input type="checkbox" id="useRec" checked style="margin-top:3px;flex:none"> <span>Uvjet povlačenja vode (odbacuje stalne vode i trajno mokra tla)</span></label>
+        <div class="row">
+          <button class="btn" data-preset="-14,-2,0,0">Blago</button>
+          <button class="btn primary" data-preset="-16,-3,3,1">Pravilo iz analize</button>
+          <button class="btn" data-preset="-19,-5,0,0">Strogo</button>
+          <button class="btn" id="otsu">Automatski prag (Otsu)</button>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><span class="v" id="t_ha">–</span><span class="l">ha poplave prema odabranom pravilu</span></div>
+          <div class="kpi"><span class="v" id="t_diff">–</span><span class="l">razlika prema analizi na 10 m (1.541 ha)</span></div>
+        </div>
+        <div style="display:grid;gap:6px">
+          <h3>Histogram VV 17. 5. za piksele s padom signala</h3>
+          <canvas class="hist" id="hist" width="700" height="240"></canvas>
+          <p class="note">Prikazani su samo pikseli koji zadovoljavaju uvjete promjene. Lijevi vrh je voda (zrcalna refleksija), desni kopno kojem je signal pao iz drugih razloga. Otsuova metoda automatski bira prag koji najbolje razdvaja te dvije skupine i potvrđuje ručno odabran prag od −16 dB.</p>
+        </div>
+        <p class="note" id="thrStatus">Rasterski podaci učitavaju se kad otvorite ovu karticu (oko 4 MB).</p>
+      </section>
+
+      <!-- POUZDANOST -->
+      <section class="pane" id="pane-pouzdanost" hidden>
+        <p class="note">Prava matrica konfuzije traži podatke s terena (očevid ili prijave u Registar šteta po parcelama). Njih nemamo, pa pouzdanost procjenjujemo usporedbom s neovisnim satelitskim mjerenjima i testovima osjetljivosti. Na dnu je uzorak parcela za terensku provjeru: kad se obiđe, daje pravu matricu konfuzije.</p>
+        <div id="relBox" style="display:grid;gap:18px"></div>
+        <div style="display:grid;gap:8px">
+          <h3>Uzorak za terensku provjeru</h3>
+          <p class="note" id="sampleNote"></p>
+          <div class="row"><button class="btn primary" id="dlSample">Preuzmi uzorak (CSV)</button><button class="btn" id="cpSample">Kopiraj uzorak</button></div>
+        </div>
+      </section>
+
+      <!-- METODA -->
+      <section class="pane method" id="pane-metoda" hidden>
+        <h2>Kako je izračunato</h2>
+        <div class="only-hail" style="display:grid;gap:14px">
+        <ol class="steps">
+          <li><b>Događaj.</b> Tuča 1. 7. 2024. oko 17:10 UTC, Županja i okolica. U European Severe Weather Database (ESWD, eswd.eu) prijavljeno je više tuča promjera 4,5–6,5 cm (provjera kvalitete QC1).</li>
+          <li><b>Snimke.</b> Sentinel-2 L2A, pločica T33TYL, 22. 6. 2024. (prije) i 7. 7. 2024. (poslije), gotovo bez oblaka. Indeksi: NDVI, NDRE, NDMI, MSAVI2, PSRI i BSI, prije, poslije i njihova razlika.</li>
+          <li><b>Maska žetve.</b> Između dviju snimaka žanju se pšenica i ječam, a pad NDVI-ja zbog žetve izgleda kao šteta. Pikseli s niskim NDVI-jem prije ili s golim tlom poslije (BSI) maskirani su, a parcele bez preostalih piksela označene su „nije ocijenjeno – žetva”.</li>
+          <li><b>Pojas tuče.</b> Prag na dNDVI, zaglađivanje (Majority) i povezivanje u cjeline (RegionGroup), pa pretvaranje u poligone.</li>
+          <li><b>Parcele.</b> ARKOD oranice suzene za 10 m prema unutra (rub ne kvari statistiku). Za svaku: srednji dNDVI, broj piksela i udio u pojasu tuče.</li>
+          <li><b>Klase.</b> z = (dNDVI − μ)/σ prema referentnim parcelama (μ = −0,024, σ = 0,185). Klasa 1 za z ≤ −1 (moguća šteta), 2 za z ≤ −2 (vjerojatna), 3 za z ≤ −3 (jaka). Za provjeru je izračunata i druga referenca, samo iz oranica izvan pojasa tuče.</li>
+          <li><b>Šteta.</b> Površina parcele × prinos × cijena iz Registra šteta × gubitak prinosa. Gubitak je ili izmjeren iz NDVI-ja (pad veći od uobičajenog na oranicama izvan pojasa, podijeljen s NDVI-jem prije, 0–100 %) ili zadan scenarijem.</li>
+        </ol>
+        <h3>Ograničenja</h3>
+        <ul class="steps">
+          <li>ARKOD ne bilježi usjev. Krajem lipnja pšenica sazrijeva i NDVI joj pada i bez tuče, pa dio parcela klase 1 može biti prirodno sazrijevanje. To što su oštećene parcele u kompaktnom pojasu ide u prilog tuči.</li>
+          <li>Referentne parcele uključuju i dio oštećenih, pa je σ velik i klasifikacija stroga (konzervativna procjena).</li>
+          <li>Parcele požnjevene prije 7. 7. (oko četvrtine) nisu ocijenjene.</li>
+          <li>Rezultat je stručna procjena za usmjeravanje očevida, a ne službeni nalaz povjerenstva.</li>
+        </ul>
+        </div>
+        <div class="only-flood" style="display:grid;gap:14px">
+        <ol class="steps">
+          <li><b>Snimke.</b> Sentinel-1A GRD, IW, polarizacija VV, tri datuma iste putanje: 5. 5. (prije poplave), 17. 5. (poplava, dan-dva nakon najvišeg vodostaja 15.–16. 5.) i 29. 5. 2023. (povlačenje). Kalibracija, filtriranje šuma i terenska korekcija, pretvorba u dB, piksel 10 m, HTRS96/TM.</li>
+          <li><b>Detekcija promjene.</b> Piksel je poplavljen ako je VV na dan 17. 5. ispod −16 dB, ako je pao za više od 3 dB u odnosu na 5. 5. i ako je do 29. 5. ponovno porastao za više od 3 dB. Treći uvjet odbacuje stalne vodene površine, što je provjereno slojem JRC Global Surface Water.</li>
+          <li><b>Čišćenje.</b> Rasterska maska pretvorena je u poligone i uklonjeni su dijelovi manji od 0,05 ha (šum radara, pojedinačni pikseli).</li>
+          <li><b>Parcele.</b> Presjek s ARKOD parcelama 2024. Za svaku parcelu računa se poplavljena površina (ha), postotak poplavljenosti i razred: 1 (do 25 %), 2 (25–50 %), 3 (50–75 %), 4 (više od 75 %).</li>
+          <li><b>Optička provjera.</b> Sentinel-2 L2A za 12. 5. 2022. (normalna godina), 5. 5. 2023. (prije) i 22. 5. 2023. (pet dana nakon radarske snimke poplave). Refleksija je ispravljena za pomak −1000 (procesna verzija N0510), a oblaci, sjene i cirus maskirani su klasifikacijom scene (SCL 3, 8, 9, 10). MNDWI = (B03 − B11)/(B03 + B11) pokazuje vodu i mokro tlo.</li>
+          <li><b>Stanje vegetacije.</b> NDVI = (B8A − B04)/(B8A + B04) računa se za poplavljeni dio svake parcele. Uobičajena promjena NDVI-ja između 5. 5. i 22. 5. određena je na nepoplavljenim ARKOD parcelama iste vrste uporabe (medijan i MAD, kontrolni skup od oko 24.000 parcela). Odstupanje poplavljene parcele od te promjene daje z-vrijednost i gubitak prinosa: pad NDVI-ja veći od uobičajenog, podijeljen s NDVI-jem prije poplave (najmanje 0,15), ograničen na 0–100 %. Primjenjuje se samo kad je odstupanje značajno (z < −1). Na oranicama koje su 5. 5. bile golo tlo (NDVI < 0,3, tek posijano) pad vegetacije ne može pokazati štetu, pa se za njih, kao i za parcele pod oblacima, uzima 50 %.</li>
+          <li><b>Šteta.</b> Poplavljena površina × prinos × cijena iz Registra šteta × gubitak prinosa. Gubitak prinosa je ili izmjeren za svaku parcelu (NDVI) ili zadan scenarijem 25, 50 ili 100 %.</li>
+        </ol>
+        </div>
+        <h3>Otvoreni podaci</h3>
+        <ul class="steps">
+          <li>Copernicus Sentinel-1 i Sentinel-2, ESA (Copernicus Data Space Ecosystem)</li>
+          <li>ARKOD 2024, Agencija za plaćanja u poljoprivredi, ribarstvu i ruralnom razvoju</li>
+          <li>Granice JLS i digitalni ortofoto, Državna geodetska uprava (WMS)</li>
+          <li>Vodna tijela, Hrvatske vode</li>
+          <li>European Severe Weather Database (ESWD), European Severe Storms Laboratory</li>
+          <li>Global Surface Water, Europska komisija, JRC</li>
+          <li>Jedinstvene cijene za Registar šteta 2026./2027. (DZS, TISUP)</li>
+        </ul>
+        <h3 class="only-flood">Ograničenja</h3>
+        <ul class="steps only-flood">
+          <li>Radar ne vidi vodu ispod gustog drveća i u izgrađenom području, pa obuhvat može biti podcijenjen uz šume i naselja.</li>
+          <li>Optička snimka 22. 5. nastala je pet dana nakon radarske snimke poplave, kad se voda već povlačila, i oko 6 % područja prekrivaju oblaci. Za parcele pod oblacima gubitak prinosa nije izmjeren i uzima se 50 %.</li>
+          <li>Na oranicama koje su 5. 5. bile golo tlo NDVI ne može izmjeriti štetu (npr. trošak ponovne sjetve), pa se za 112 takvih parcela uzima 50 %. Ako je odstupanje NDVI-ja od kontrolnih parcela malo (z ≥ −1), izmjereni gubitak je 0 %.</li>
+          <li>ARKOD ne bilježi usjev, pa je kultura na oranicama pretpostavka koju korisnik može promijeniti.</li>
+          <li>Rezultat je stručna procjena za brzu orijentaciju i usmjeravanje terenskog očevida, a ne službeni nalaz povjerenstva.</li>
+        </ul>
+        <p class="note">Otvoreni kod, licencija EUPL-1.2. Datathon Portala otvorenih podataka 2026, izazov B. Studentski tim Geografskog odsjeka PMF-a Sveučilišta u Zagrebu, mentor doc. dr. sc. Marin Mićunović.</p>
+      </section>
+    </div>
+  </aside>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script>
+"use strict";
+const LU={200:"Oranica",210:"Staklenik/plastenik",310:"Livada",320:"Pašnjak",321:"Krški pašnjak",410:"Vinograd",411:"Iskrčeni vinograd",421:"Maslinik",422:"Voćnjak",430:"Kulture kratke ophodnje",450:"Rasadnik",490:"Mješoviti višegodišnji nasadi",900:"Ostale vrste korištenja",910:"Privremeno neodržavana parcela"};
+// Cijene 2026./27. (Prijedlog jedinstvenih cijena za Registar šteta), prinosi su početne pretpostavke
+const CROPS={
+  kukuruz:{n:"Kukuruz (zrno)",y:7.7,p:177.59,p0:166.65},
+  psenica:{n:"Pšenica",y:5.9,p:175.93,p0:171.08},
+  jecam:{n:"Ječam",y:5.0,p:163.32,p0:174.24},
+  soja:{n:"Soja",y:3.0,p:399.18,p0:430.74},
+  suncokret:{n:"Suncokret",y:3.0,p:469.98,p0:386.34},
+  repica:{n:"Uljana repica",y:3.2,p:458.33,p0:439.89},
+  lucerna:{n:"Lucerna",y:7.0,p:72.98,p0:87.89}
+};
+const DEF={
+  200:{crop:"kukuruz"},
+  310:{k:"Sijeno s livade (cijena kao lucerna)",y:4.0,p:72.98,p0:87.89},
+  320:{k:"Krma s pašnjaka (cijena kao lucerna)",y:2.5,p:72.98,p0:87.89},
+  321:{k:"Krma s krškog pašnjaka",y:1.2,p:72.98,p0:87.89},
+  422:{k:"Jabuka",y:20,p:640,p0:530},
+  410:{k:"Grožđe",y:7,p:1060,p0:1150},
+  210:{k:"Rajčica",y:60,p:1280,p0:1230},
+  450:{k:"Rasadnik (procjena po komadu)",y:0,p:0,p0:0},
+  490:{k:"Mješoviti nasad",y:0,p:0,p0:0},
+  900:{k:"Bez poljoprivredne kulture",y:0,p:0,p0:0},
+  910:{k:"Neodržavano, bez prinosa",y:0,p:0,p0:0}
+};
+const CLS=[{r:1,n:"do 25 %",c:"var(--c1)",h:"#ffe08a"},{r:2,n:"25–50 %",c:"var(--c2)",h:"#fdae61"},{r:3,n:"50–75 %",c:"var(--c3)",h:"#ec5b38"},{r:4,n:"više od 75 %",c:"var(--c4)",h:"#a1123a"}];
+const fmt=(v,d=0)=>v.toLocaleString("hr-HR",{minimumFractionDigits:d,maximumFractionDigits:d});
+const eur=v=>fmt(v,0)+" €";
+const $=id=>document.getElementById(id);
+let S={loss:"ndvi",prices:{},colorBy:"r",sel:null};
+let OPT=null;
+let P=[],FP=[],JLS=[],rasterMeta=null;
+let HZ="poplava";const DS={};let TMETA=null,TREF=null,tParLayer=null,pojasLayer=null,tdLayer=null,eswdLayer=null,tJlsLayer=null,tLoaded=null;
+const TCLS=[{kl:1,n:"Klasa 1 – moguća šteta",h:"#fdae61"},{kl:2,n:"Klasa 2 – vjerojatna šteta",h:"#ec5b38"},{kl:3,n:"Klasa 3 – jaka šteta",h:"#a1123a"}];
+
+function resetPrices(old){
+  S.prices={};
+  for(const k in DEF){
+    if(k==="200"){const c=CROPS.kukuruz;S.prices[200]={crop:"kukuruz",k:c.n,y:c.y,p:old?c.p0:c.p};}
+    else{const d=DEF[k];S.prices[k]={k:d.k,y:d.y,p:old?d.p0:d.p};}
+  }
+}
+resetPrices(false);
+function priceOf(lu){return S.prices[lu]||{k:LU[lu]||"Ostalo",y:0,p:0};}
+function kOf(p){
+  if(HZ==="tuca"){if(p.kl<1)return 0;return S.loss==="ndvi"?(p.k!=null?p.k:0):S.loss;}
+  return S.loss==="ndvi"?(p.o&&p.o.k!=null?p.o.k:0.5):S.loss;}
+function dmg(p){const pr=priceOf(p.lu);return (HZ==="tuca"?p.ha:p.fha)*pr.y*pr.p*kOf(p);}
+
+// ---------- karta ----------
+const map=L.map("map",{zoomControl:false,preferCanvas:true,minZoom:9,maxZoom:18}).setView([45.45,15.62],11);
+map.attributionControl.setPrefix(false);
+L.control.zoom({position:"bottomright"}).addTo(map);
+L.control.scale({imperial:false,position:"bottomright"}).addTo(map);
+const canvasR=L.canvas({padding:0.4,tolerance:4});
+const panes=["sar","floodext","others","parcels","sel"];
+panes.forEach((n,i)=>{map.createPane(n);map.getPane(n).style.zIndex=300+i*10;});
+let bases={},curBase=null,extFail=false;
+function wms(url,layers,opts){return L.tileLayer.wms(url,Object.assign({layers,format:"image/png",transparent:true,version:"1.3.0",maxZoom:19},opts||{}));}
+function mkBase(key){
+  if(bases[key])return bases[key];
+  const B=rasterMeta.bounds;let l;
+  const img=f=>L.imageOverlay("data/"+f,B,{pane:"sar",interactive:false,attribution:"Copernicus Sentinel-1 (ESA), obrada: tim Datathon 2026"});
+  const img2=f=>L.imageOverlay("data/"+f,B,{pane:"sar",interactive:false,attribution:"Copernicus Sentinel-2 (ESA), obrada: tim Datathon 2026"});
+  const img3=f=>L.imageOverlay("data/tuca/"+f,TMETA.bounds,{pane:"sar",interactive:false,attribution:"Copernicus Sentinel-2 (ESA), obrada: tim Datathon 2026"});
+  if(key==="t07")l=img3("s2_20240707.webp");
+  else if(key==="t22")l=img3("s2_20240622.webp");
+  else if(key==="s2b")l=img2("s2_20230522.webp");
+  else if(key==="s2a")l=img2("s2_20230505.webp");
+  else if(key==="s2n")l=img2("s2_20220512.webp");
+  else if(key==="rgb")l=img("sar_rgb.webp");
+  else if(key==="v05")l=img("sar_0505.webp");
+  else if(key==="v17")l=img("sar_1705.webp");
+  else if(key==="v29")l=img("sar_2905.webp");
+  else if(key==="dof")l=wms("https://geoportal.dgu.hr/services/inspire/orthophoto_2024/wms","OI.OrthoimageCoverage",{transparent:false,format:"image/jpeg",attribution:"DOF 2024 © Državna geodetska uprava"});
+  else if(key==="osm")l=L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"});
+  else if(key==="esri")l=L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:19,attribution:"Esri, Maxar, Earthstar Geographics"});
+  if(l&&l.on)l.on("tileerror",()=>{if(!extFail&&curBase===l){extFail=true;toast("Vanjska podloga trenutno nije dostupna. Prikazujem satelitsku snimku Sentinel-2.");$("base").value="s2b";setBase("s2b");}});
+  return bases[key]=l||null;
+}
+function setBase(key){
+  if(curBase)map.removeLayer(curBase);
+  extFail=false;curBase=key==="none"?null:mkBase(key);
+  if(curBase)curBase.addTo(map);
+  if(["dof","osm","esri"].includes(key)&&curBase.bringToBack)curBase.bringToBack();
+}
+const katastar=wms("https://oss.uredjenazemlja.hr/OssWebServices/inspireService/wms","CP.CadastralParcel",{attribution:"Katastar © DGU",maxZoom:19,minZoom:14});
+
+function decode(rings,scale){return rings.map(r=>{const out=[];let x=0,y=0;for(let i=0;i<r.length;i+=2){x+=r[i];y+=r[i+1];out.push([y/scale,x/scale]);}return out;});}
+function toLatLngs(g,scale){return g.map(poly=>decode(poly,scale));}
+
+let floodLayer,fpLayer,opLayer,jlsLayer,rivLayer,selLayer;
+function fpStyle(p){
+  if(HZ==="tuca")return tStyle(p);
+  let col;
+  if(S.colorBy==="r")col=CLS[p.r-1]?CLS[p.r-1].h:"#999";
+  else{const e=p.fha>0?dmg(p)/p.ha:0;col=e<=0?"#8a9aa3":e<300?"#ffe08a":e<800?"#fdae61":e<1500?"#ec5b38":"#a1123a";}
+  return {color:"#1b1b1b",weight:0.6,fillColor:col,fillOpacity:0.82,pane:"parcels",renderer:canvasR};
+}
+function legend(){
+  const el=$("legend");
+  if(HZ==="tuca"){
+    let h="<h3>Oranice (ARKOD)</h3><div class='items'>";
+    if(S.colorBy==="r"){TCLS.forEach(c=>h+=`<div><span class="sw" style="background:${c.h}"></span>${c.n}</div>`);h+=`<div><span class="sw" style="background:#f3f3f0"></span>klasa 0 – bez izdvojenog pada</div><div><span class="sw" style="background:#7fb3d5"></span>žetva – nije ocijenjeno</div>`;}
+    else [["#8a9aa3","0 €/ha"],["#ffe08a","do 300 €/ha"],["#fdae61","300–800 €/ha"],["#ec5b38","800–1.500 €/ha"],["#a1123a","više od 1.500 €/ha"]].forEach(([c,t])=>h+=`<div><span class="sw" style="background:${c}"></span>${t}</div>`);
+    if($("l_pojas").checked)h+=`<div><span class="sw" style="background:transparent;border:2px solid #ffffff"></span>pojas tuče</div>`;
+    if($("l_eswd").checked)h+=`<div><span class="sw" style="background:#3fd2ff;border-radius:50%"></span>prijava tuče ESWD</div>`;
+    el.innerHTML=h+"</div>";return;
+  }
+  let h="<h3>Parcele</h3><div class='items'>";
+  if(S.colorBy==="r")CLS.forEach(c=>h+=`<div><span class="sw" style="background:${c.h}"></span>razred ${c.r}: ${c.n}</div>`);
+  else [["#8a9aa3","0 €/ha"],["#ffe08a","do 300 €/ha"],["#fdae61","300–800 €/ha"],["#ec5b38","800–1.500 €/ha"],["#a1123a","više od 1.500 €/ha"]].forEach(([c,t])=>h+=`<div><span class="sw" style="background:${c}"></span>${t}</div>`);
+  h+=`<div><span class="sw" style="background:transparent;border:2px solid var(--water)"></span>obuhvat poplave (radar)</div>`;
+  if($("l_dndvi")&&$("l_dndvi").checked)h+=`<div><span class="sw" style="background:#c82828"></span>pad NDVI-ja</div><div><span class="sw" style="background:#28c828"></span>rast NDVI-ja</div>`;
+  if($("l_s2w")&&$("l_s2w").checked)h+=`<div><span class="sw" style="background:#286eff"></span>voda ili mokro tlo 22. 5.</div>`;
+  h+=`</div>`;
+  el.innerHTML=h;
+}
+
+function selectParcel(p,zoom){
+  S.sel=p;
+  if(selLayer)map.removeLayer(selLayer);
+  selLayer=L.polygon(p.ll,{renderer:canvasR,color:"#ffffff",weight:3,fill:false,dashArray:"4 3",interactive:false}).addTo(map);
+  if(zoom)map.fitBounds(selLayer.getBounds(),{maxZoom:16,padding:[40,40]});
+  showTab("parcela");renderParcel();
+}
+
+// ---------- izračuni i prikaz ----------
+function recompute(){
+  if(HZ==="tuca")return recomputeT();
+  let tot=0,ha=0,n=0,tot25=0,tot50=0,tot100=0,totN=0;
+  const byJ=JLS.map(()=>({n:0,ha:0,e:0})),out={n:0,ha:0,e:0};
+  const byLU={},byC=[0,0,0,0],byCha=[0,0,0,0];
+  for(const p of FP){
+    const pr=priceOf(p.lu),base=p.fha*pr.y*pr.p,e=base*kOf(p);
+    tot+=e;tot25+=base*.25;tot50+=base*.5;tot100+=base;totN+=base*(p.o&&p.o.k!=null?p.o.k:0.5);ha+=p.fha;n++;
+    const j=p.j>=0?byJ[p.j]:out;j.n++;j.ha+=p.fha;j.e+=e;
+    const L_=byLU[p.lu]||(byLU[p.lu]={n:0,ha:0,e:0});L_.n++;L_.ha+=p.fha;L_.e+=e;
+    byC[p.r-1]++;byCha[p.r-1]+=p.fha;
+  }
+  $("k_eur").textContent=eur(tot);
+  $("k_eur_sub").textContent=`Prema NDVI: ${eur(totN)} · scenariji 25 / 50 / 100 %: ${eur(tot25)} · ${eur(tot50)} · ${eur(tot100)}`;
+  $("k_ha").textContent=fmt(ha,1);$("k_n").textContent=fmt(n);
+  const allHa=P.reduce((s,p)=>s+p.ha,0);$("k_share").textContent=fmt(ha/allHa*100,1)+" %";
+  const mx=Math.max(...byC);
+  $("classBars").innerHTML=CLS.map((c,i)=>`<div class="bar"><span><span class="sw" style="background:${c.h}"></span>${c.n}</span><span class="track"><span class="fill" style="display:block;width:${byC[i]/mx*100}%;background:${c.h}"></span></span><span class="n">${fmt(byC[i])}</span></div>`).join("");
+  let t=`<tr><th>JLS</th><th class="n">parcela</th><th class="n">ha</th><th class="n">šteta</th></tr>`;
+  JLS.forEach((nm,i)=>t+=`<tr><td>${title(nm)}</td><td class="n">${fmt(byJ[i].n)}</td><td class="n">${fmt(byJ[i].ha,1)}</td><td class="n">${eur(byJ[i].e)}</td></tr>`);
+  t+=`<tr><td>Pojas 3 km (susjedne JLS)</td><td class="n">${fmt(out.n)}</td><td class="n">${fmt(out.ha,1)}</td><td class="n">${eur(out.e)}</td></tr>`;
+  t+=`<tr><th>Ukupno</th><th class="n">${fmt(n)}</th><th class="n">${fmt(ha,1)}</th><th class="n">${eur(tot)}</th></tr>`;
+  $("jlsTable").innerHTML=t;
+  let u=`<tr><th>Vrsta uporabe</th><th class="n">parcela</th><th class="n">ha</th><th class="n">šteta</th></tr>`;
+  Object.keys(byLU).sort((a,b)=>byLU[b].ha-byLU[a].ha).forEach(k=>u+=`<tr><td>${LU[k]||k} <span class="note">(${k})</span></td><td class="n">${fmt(byLU[k].n)}</td><td class="n">${fmt(byLU[k].ha,1)}</td><td class="n">${eur(byLU[k].e)}</td></tr>`);
+  $("luTable").innerHTML=u;
+  S._byJ=byJ;S._out=out;
+  if(S.colorBy==="e")restyle();
+  if(S.sel)renderParcel();
+}
+const title=s=>s.toLowerCase().replace(/(^|[\s-])(\p{L})/gu,(m,a,b)=>a+b.toUpperCase());
+
+function renderParcel(){
+  const p=S.sel;if(!p)return;
+  if(HZ==="tuca")return renderParcelT(p);
+  $("parcelEmpty").hidden=true;$("parcelBox").hidden=false;
+  const pr=priceOf(p.lu);
+  $("p_where").textContent=(p.j>=0?title(JLS[p.j]):"Pojas 3 km oko područja")+(p.top?" · "+title(p.top):"");
+  $("p_title").textContent="ARKOD "+p.id;
+  $("p_pill").innerHTML=p.r>0?`<span class="pill" style="background:${CLS[p.r-1].h}">razred ${p.r} · ${CLS[p.r-1].n}</span>`:`<span class="pill" style="background:#c9d3d8">nije poplavljena</span>`;
+  $("p_facts").innerHTML=`<dt>Vrsta uporabe</dt><dd>${LU[p.lu]||p.lu} (${p.lu})</dd><dt>Površina parcele</dt><dd>${fmt(p.ha,4)} ha</dd><dt>Poplavljeno</dt><dd>${fmt(p.fha,4)} ha</dd><dt>Udio poplavljenosti</dt><dd>${fmt(p.pct,1)} %</dd><dt>Kultura (pretpostavka)</dt><dd>${pr.k}</dd>`;
+  const kk=kOf(p),e=p.fha*pr.y*pr.p*kk;
+  const kNote=S.loss==="ndvi"?(p.o&&p.o.k!=null?" (gubitak prema NDVI)":" ("+(p.o&&p.o.razlog?p.o.razlog:"nema mjerenja")+", uzeto 50 %)"):"";
+  $("p_formula").innerHTML=p.fha>0?`${fmt(p.fha,4)} ha × ${fmt(pr.y,1)} t/ha × ${fmt(pr.p,2)} €/t × ${fmt(kk*100)} %${kNote}<br>= <b>${fmt(e,2)} €</b>`:"Parcela nije u obuhvatu poplave, šteta 0 €.";
+  renderOptical(p);
+  drawSignature(p);
+}
+
+// ---------- rasterski podaci (radarski potpis, prag) ----------
+let RD=null,RDp=null;
+function loadRaster(){
+  if(RDp)return RDp;
+  RDp=new Promise((res,rej)=>{
+    const im=new Image();im.onload=()=>{
+      const c=document.createElement("canvas");c.width=im.width;c.height=im.height;
+      const ctx=c.getContext("2d",{willReadFrequently:true});ctx.drawImage(im,0,0);
+      const d=ctx.getImageData(0,0,c.width,c.height).data;
+      const B=rasterMeta.data_bounds||rasterMeta.bounds,sw=L.Projection.SphericalMercator.project(L.latLng(B[0])),ne=L.Projection.SphericalMercator.project(L.latLng(B[1]));
+      RD={w:c.width,h:c.height,d,x0:sw.x,x1:ne.x,y0:sw.y,y1:ne.y};
+      $("thrStatus").textContent="Rasterski podaci učitani ("+c.width+" × "+c.height+" piksela, 40 m).";
+      res(RD);
+    };im.onerror=rej;im.src="data/sar_data.png";
+  });
+  return RDp;
+}
+const decV=(v,lo,hi)=>(v-1)/254*(hi-lo)+lo;
+function pixOf(lat,lng){const m=L.Projection.SphericalMercator.project(L.latLng(lat,lng));return [Math.floor((m.x-RD.x0)/(RD.x1-RD.x0)*RD.w),Math.floor((RD.y1-m.y)/(RD.y1-RD.y0)*RD.h)];}
+function inRing(x,y,r){let ins=false;for(let i=0,j=r.length-1;i<r.length;j=i++){const xi=r[i][0],yi=r[i][1],xj=r[j][0],yj=r[j][1];if(((yi>y)!=(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi))ins=!ins;}return ins;}
+function parcelSig(p){
+  // srednja vrijednost piksela unutar poligona; ako je parcela manja od piksela, uzima se središnji piksel
+  const rings=p.ll.map(poly=>poly[0].map(([la,lo])=>pixOf(la,lo).map(Number)));
+  let xs=rings.flat().map(a=>a[0]),ys=rings.flat().map(a=>a[1]);
+  const x0=Math.max(0,Math.min(...xs)),x1=Math.min(RD.w-1,Math.max(...xs)),y0=Math.max(0,Math.min(...ys)),y1=Math.min(RD.h-1,Math.max(...ys));
+  let s=[0,0,0],n=0;
+  const add=(x,y)=>{const i=(y*RD.w+x)*4;if(RD.d[i+3]<128)return;const v17=decV(RD.d[i],-30,0),d1=decV(RD.d[i+1],-15,15),d2=decV(RD.d[i+2],-15,15);s[0]+=v17-d1;s[1]+=v17;s[2]+=v17+d2;n++;};
+  for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){if(rings.some(r=>inRing(x+.5,y+.5,r)))add(x,y);}
+  if(!n){const c=L.polygon(p.ll).getBounds().getCenter(),[x,y]=pixOf(c.lat,c.lng);if(x>=0&&y>=0&&x<RD.w&&y<RD.h)add(x,y);}
+  return n?{v:s.map(a=>a/n),n}:null;
+}
+function cssVar(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
+function drawSignature(p){
+  const cv=$("sig"),ctx=cv.getContext("2d");ctx.clearRect(0,0,cv.width,cv.height);
+  ctx.fillStyle=cssVar("--muted");ctx.font="22px "+cssVar("--f-mono");ctx.fillText("učitavanje radarskih podataka…",20,40);
+  loadRaster().then(()=>{
+    const sg=parcelSig(p);ctx.clearRect(0,0,cv.width,cv.height);
+    if(!sg){ctx.fillText("Parcela je izvan radarske snimke.",20,40);return;}
+    const W=cv.width,H=cv.height,pl=86,pr=30,pt=24,pb=44,lo=-26,hi=-2;
+    const X=i=>pl+i*(W-pl-pr)/2,Y=v=>pt+(hi-v)/(hi-lo)*(H-pt-pb);
+    ctx.strokeStyle=cssVar("--line");ctx.lineWidth=1;ctx.fillStyle=cssVar("--muted");ctx.font="19px "+cssVar("--f-mono");
+    for(let v=-25;v<=-5;v+=5){ctx.beginPath();ctx.moveTo(pl,Y(v));ctx.lineTo(W-pr,Y(v));ctx.stroke();ctx.fillText(v+" dB",8,Y(v)+6);}
+    ctx.setLineDash([6,5]);ctx.strokeStyle=cssVar("--water");ctx.beginPath();ctx.moveTo(pl,Y(-16));ctx.lineTo(W-pr,Y(-16));ctx.stroke();ctx.setLineDash([]);
+    ["5. 5.","17. 5.","29. 5."].forEach((t,i)=>ctx.fillText(t,X(i)-26,H-12));
+    ctx.strokeStyle=cssVar("--accent");ctx.lineWidth=4;ctx.beginPath();sg.v.forEach((v,i)=>i?ctx.lineTo(X(i),Y(v)):ctx.moveTo(X(i),Y(v)));ctx.stroke();
+    ctx.fillStyle=cssVar("--accent");sg.v.forEach((v,i)=>{ctx.beginPath();ctx.arc(X(i),Y(v),7,0,7);ctx.fill();});
+    ctx.fillStyle=cssVar("--ink");ctx.font="600 19px "+cssVar("--f-mono");sg.v.forEach((v,i)=>ctx.fillText(fmt(v,1),X(i)+(i==2?-60:10),Y(v)-12));
+    $("sigNote").textContent=`Srednja vrijednost ${sg.n} piksela (40 m) unutar parcele. Isprekidana linija je prag vode (−16 dB). Pad na 17. 5. i oporavak do 29. 5. znak su privremenog plavljenja.`;
+  }).catch(()=>{ctx.clearRect(0,0,cv.width,cv.height);ctx.fillText("Radarski podaci nisu dostupni.",20,40);});
+}
+
+// prag detekcije
+let thrOverlay=null,thrTimer=null,HIST=null;
+function areaFactor(){ // površina piksela u ha po retku (Web Mercator)
+  const f=new Float64Array(RD.h),dy=(RD.y1-RD.y0)/RD.h,dx=(RD.x1-RD.x0)/RD.w;
+  for(let r=0;r<RD.h;r++){const y=RD.y1-(r+.5)*dy,lat=2*Math.atan(Math.exp(y/6378137))-Math.PI/2,k=Math.cos(lat);f[r]=dx*dy*k*k/1e4;}
+  return f;
+}
+let AF=null;
+function runThreshold(){
+  if(!RD)return;
+  const t1=+$("t1").value,t2=+$("t2").value,t3=+$("t3").value,rec=$("useRec").checked;
+  $("o1").textContent=fmtDb(t1);$("o2").textContent=fmtDb(t2);$("o3").textContent=fmtDb(t3,true);
+  AF=AF||areaFactor();
+  const c=document.createElement("canvas");c.width=RD.w;c.height=RD.h;const ctx=c.getContext("2d"),img=ctx.createImageData(RD.w,RD.h),o=img.data,d=RD.d;
+  let ha=0;
+  for(let r=0;r<RD.h;r++){const f=AF[r];for(let x=0;x<RD.w;x++){const i=(r*RD.w+x)*4;if(d[i+3]<128)continue;
+    const v17=decV(d[i],-30,0),d1=decV(d[i+1],-15,15),d2=decV(d[i+2],-15,15);
+    if(v17<t1&&d1<t2&&(!rec||d2>t3)){ha+=f;o[i]=25;o[i+1]=200;o[i+2]=240;o[i+3]=230;}}}
+  ctx.putImageData(img,0,0);
+  const url=c.toDataURL();
+  if(thrOverlay)thrOverlay.setUrl(url);else thrOverlay=L.imageOverlay(url,rasterMeta.data_bounds||rasterMeta.bounds,{pane:"floodext",interactive:false,opacity:.85});
+  if($("l_thr").checked&&!map.hasLayer(thrOverlay))thrOverlay.addTo(map);
+  $("t_ha").textContent=fmt(ha,0);
+  const diff=(ha-1541.46)/1541.46*100;$("t_diff").textContent=(diff>0?"+":"")+fmt(diff,1)+" %";
+  buildHist();drawHist(t1);
+}
+const fmtDb=(v,plus)=>(v>0&&plus?"+":"")+fmt(v,1).replace("-","−")+" dB";
+function buildHist(){
+  // histogram VV(17.5.) samo za piksele koji zadovoljavaju uvjete promjene (pad, po izboru i oporavak)
+  const t2=+$("t2").value,t3=+$("t3").value,rec=$("useRec").checked;
+  const bins=new Float64Array(120),d=RD.d;// −30…0 dB, korak 0,25
+  for(let i=0;i<d.length;i+=4){if(d[i+3]<128)continue;const d1=decV(d[i+1],-15,15),d2=decV(d[i+2],-15,15);if(!(d1<t2&&(!rec||d2>t3)))continue;const v=decV(d[i],-30,0);const b=Math.min(119,Math.max(0,Math.floor((v+30)/0.25)));bins[b]++;}
+  HIST=bins;
+}
+function otsu(){
+  const h=HIST,N=h.reduce((a,b)=>a+b,0);let sum=0;for(let i=0;i<h.length;i++)sum+=i*h[i];
+  let sB=0,wB=0,best=0,bi=0;for(let i=0;i<h.length;i++){wB+=h[i];if(!wB)continue;const wF=N-wB;if(!wF)break;sB+=i*h[i];const mB=sB/wB,mF=(sum-sB)/wF,b=wB*wF*(mB-mF)**2;if(b>best){best=b;bi=i;}}
+  return -30+(bi+1)*0.25;
+}
+function drawHist(t1){
+  if(!HIST)buildHist();
+  const cv=$("hist"),ctx=cv.getContext("2d"),W=cv.width,H=cv.height,pl=10,pb=34;ctx.clearRect(0,0,W,H);
+  const mx=Math.max(...HIST),bw=(W-2*pl)/HIST.length;
+  for(let i=0;i<HIST.length;i++){const v=-30+i*.25;ctx.fillStyle=v<t1?cssVar("--water"):cssVar("--muted");const h=Math.sqrt(HIST[i]/mx)*(H-pb-10);ctx.fillRect(pl+i*bw,H-pb-h,bw-.5,h);}
+  const xt=pl+(t1+30)/.25*bw;ctx.strokeStyle=cssVar("--ink");ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(xt,6);ctx.lineTo(xt,H-pb);ctx.stroke();
+  ctx.fillStyle=cssVar("--muted");ctx.font="19px "+cssVar("--f-mono");[-30,-20,-10,0].forEach(v=>{const x=pl+(v+30)/.25*bw;ctx.fillText(v+" dB",Math.min(W-62,Math.max(0,x-24)),H-8);});
+}
+function scheduleThr(){clearTimeout(thrTimer);thrTimer=setTimeout(runThreshold,120);}
+
+// ---------- optika (Sentinel-2) ----------
+let ovD=null,ovW=null,ovC=null,swA=null,swB=null,swipeOn=false;
+function optLayers(){
+  const B=rasterMeta.bounds,o={pane:"floodext",interactive:false};
+  ovD=L.imageOverlay("data/s2_dndvi.webp",B,Object.assign({opacity:.9},o));
+  ovW=L.imageOverlay("data/s2_voda_20230522.webp",B,o);
+  ovC=L.imageOverlay("data/s2_oblaci_20230522.webp",B,o);
+  [["l_dndvi",ovD],["l_s2w",ovW],["l_cloud",ovC]].forEach(([id,l])=>$(id).onchange=e=>{e.target.checked?l.addTo(map):map.removeLayer(l);legend();});
+}
+function renderCross(){
+  const st=OPT.stats,vis=st.s1_vidljivo_ha,mx=st.s1_ha;
+  const rows=[["Radar 17. 5. (Sentinel-1, raster 20 m)",st.s1_ha,"var(--water)"],["Bez oblaka 22. 5. (Sentinel-2)",vis,"#9fb3bd"],["Još voda ili mokro tlo 22. 5.",st.s1_voda_22_ha,"#2f6fff"],["Voda na istom mjestu 5. 5. (prije)",st.s1_voda_05_ha,"#c9d3d8"]];
+  $("crossBars").innerHTML=rows.map(([t,v,c])=>`<div class="bar" style="grid-template-columns:150px 1fr 70px"><span>${t}</span><span class="track"><span class="fill" style="display:block;width:${v/mx*100}%;background:${c}"></span></span><span class="n">${fmt(v,0)} ha</span></div>`).join("");
+  $("crossNote").innerHTML=`Pet dana nakon radarske snimke optika na ${fmt(st.s1_voda_22_ha/vis*100,0)} % radarski poplavljene površine još vidi vodu ili mokro tlo, a prije poplave tamo je vode bilo na samo ${fmt(st.s1_voda_05_ha/vis*100,0)} %. NDVI je na poplavljenim pikselima pao za ${fmt(-st.dndvi_poplava_median,2)} (medijan), a na nepoplavljenima se nije promijenio (${fmt(st.dndvi_kontrola_median,2)}). Dva neovisna satelita potvrđuju isti događaj.`;
+}
+function renderOptical(p){
+  const o=p.o,cv=$("sig2"),ctx=cv.getContext("2d");ctx.clearRect(0,0,cv.width,cv.height);
+  if(!o){$("p_opt").innerHTML="";$("optNote").textContent="Za nepoplavljene parcele optički pokazatelji nisu računati.";ctx.fillStyle=cssVar("--muted");ctx.font="20px "+cssVar("--f-mono");ctx.fillText("nema optičkih podataka za ovu parcelu",20,40);return;}
+  const ref=(OPT.kontrola[p.lu]||OPT.kontrola_sve).med;
+  const pts=[["12. 5. 2022.",o.ndvi22],["5. 5. 2023.",o.n05],["22. 5. 2023.",o.n22b]];
+  const W=cv.width,H=cv.height,pl=70,pr=40,pt=24,pb=44,lo=-0.4,hi=1;
+  const X=i=>pl+i*(W-pl-pr)/2,Y=v=>pt+(hi-v)/(hi-lo)*(H-pt-pb);
+  ctx.strokeStyle=cssVar("--line");ctx.lineWidth=1;ctx.fillStyle=cssVar("--muted");ctx.font="19px "+cssVar("--f-mono");
+  for(let v=-0.25;v<=1.001;v+=0.25){ctx.beginPath();ctx.moveTo(pl,Y(v));ctx.lineTo(W-pr,Y(v));ctx.stroke();ctx.fillText(fmt(v,2),8,Y(v)+6);}
+  pts.forEach(([t],i)=>ctx.fillText(t,Math.min(W-130,Math.max(0,X(i)-60)),H-12));
+  if(o.n05!=null){ // očekivano bez poplave: NDVI 5. 5. + normalna promjena nepoplavljenih parcela iste vrste
+    const ex=o.n05+ref;ctx.setLineDash([6,5]);ctx.strokeStyle=cssVar("--ok");ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(X(1),Y(o.n05));ctx.lineTo(X(2),Y(ex));ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=cssVar("--ok");ctx.beginPath();ctx.arc(X(2),Y(ex),6,0,7);ctx.fill();ctx.fillText("očekivano",X(2)-112,Y(ex)-10);
+  }
+  ctx.strokeStyle=cssVar("--c3")||"#ec5b38";ctx.strokeStyle="#ec5b38";ctx.lineWidth=4;ctx.beginPath();let st=false;
+  pts.forEach(([,v],i)=>{if(v==null){st=false;return;}if(!st){ctx.moveTo(X(i),Y(v));st=true;}else ctx.lineTo(X(i),Y(v));});ctx.stroke();
+  ctx.fillStyle="#ec5b38";pts.forEach(([,v],i)=>{if(v!=null){ctx.beginPath();ctx.arc(X(i),Y(v),7,0,7);ctx.fill();}});
+  ctx.fillStyle=cssVar("--ink");ctx.font="600 19px "+cssVar("--f-mono");pts.forEach(([,v],i)=>{if(v!=null)ctx.fillText(fmt(v,2),X(i)+(i==2?-58:10),Y(v)-12);});
+  const pc=v=>v==null?"–":fmt(v*100,0)+" %";
+  $("p_opt").innerHTML=`<dt>Pad NDVI-ja 5. 5. → 22. 5.</dt><dd>${o.n05!=null&&o.n22b!=null?fmt(o.n22b-o.n05,2):"–"}</dd><dt>Odstupanje od nepoplavljenih (z)</dt><dd>${o.z!=null?fmt(o.z,1):"–"}</dd><dt>Voda ili mokro tlo 22. 5.</dt><dd>${pc(o.voda22)}</dd><dt>Oblaci nad parcelom 22. 5.</dt><dd>${pc(o.oblak22)}</dd><dt>Gubitak prinosa prema NDVI</dt><dd><b>${o.k!=null?pc(o.k):"nije mjerljivo ("+(o.razlog||"oblaci")+")"}</b></dd>`;
+  $("optNote").textContent=(o.naPoplavi?"NDVI je izračunat na poplavljenom dijelu parcele. ":"NDVI je izračunat za cijelu parcelu. ")+"Zelena isprekidana linija je očekivano stanje bez poplave: NDVI od 5. 5. plus uobičajena promjena na nepoplavljenim parcelama iste vrste uporabe. Što je crvena točka niže od zelene, to je veća šteta na vegetaciji.";
+}
+function swipeClip(){
+  if(!swipeOn||!swB)return;const el=swB.getElement();if(!el)return;
+  const mr=map.getContainer().getBoundingClientRect(),f=+$("swipe").value/100,xs=mr.left+f*mr.width,r=el.getBoundingClientRect();
+  const lx=Math.max(0,(xs-r.left)*(el.offsetWidth/Math.max(1,r.width)));
+  el.style.clipPath=`inset(0 0 0 ${lx}px)`;$("swipeLine").style.left=(f*100)+"%";
+}
+function toggleSwipe(){
+  swipeOn=!swipeOn;$("swipeLine").hidden=!swipeOn;$("swipeCtl").hidden=!swipeOn;$("swipeBtn").textContent=swipeOn?"Zatvori usporedbu":"Usporedi prije / poslije";
+  if(swipeOn){
+    if(curBase)map.removeLayer(curBase);
+    const B=HZ==="tuca"?TMETA.bounds:rasterMeta.bounds,fa=HZ==="tuca"?"data/tuca/s2_20240622.webp":"data/s2_20230505.webp",fb=HZ==="tuca"?"data/tuca/s2_20240707.webp":"data/s2_20230522.webp";
+    $("swL").textContent=HZ==="tuca"?"22. 6.":"5. 5.";$("swR").textContent=HZ==="tuca"?"7. 7.":"22. 5.";
+    swA=L.imageOverlay(fa,B,{pane:"sar",interactive:false}).addTo(map);
+    swB=L.imageOverlay(fb,B,{pane:"sar",interactive:false}).addTo(map);
+    swB.once("load",swipeClip);setTimeout(swipeClip,50);
+  }else{if(swA)map.removeLayer(swA);if(swB)map.removeLayer(swB);swA=swB=null;setBase($("base").value);}
+}
+$("swipeBtn").onclick=toggleSwipe;$("swipe").addEventListener("input",swipeClip);map.on("move zoom zoomend viewreset resize",swipeClip);
+
+// ---------- TUČA ----------
+function tStyle(p){
+  let col,op=.8;
+  if(S.colorBy==="e"&&p.kl>=1){const e=dmg(p)/p.ha;col=e<=0?"#8a9aa3":e<300?"#ffe08a":e<800?"#fdae61":e<1500?"#ec5b38":"#a1123a";}
+  else if(p.kl>=1)col=TCLS[p.kl-1].h;
+  else if(p.kl===0){col="#f3f3f0";op=.18;}
+  else {col="#7fb3d5";op=.35;}
+  return {color:p.kl>=1?"#1b1b1b":"#e8ecee",weight:p.kl>=1?.7:.4,fillColor:col,fillOpacity:op,renderer:canvasR};
+}
+function TJ(){const r=JLS.map(nm=>[title(nm),{n:0,ha:0,e:0}]);const o=["Pojas 5 km (susjedne općine)",{n:0,ha:0,e:0}];
+  for(const p of P){if(p.kl<1)continue;const b=p.j>=0?r[p.j][1]:o[1];b.n++;b.ha+=p.ha;b.e+=dmg(p);}if(o[1].n)r.push(o);return r;}
+function recomputeT(){
+  let tot=0,ha=0,n=0,t25=0,t50=0,t100=0,tN=0,assessed=0;const byC=[0,0,0],byCha=[0,0,0],byCe=[0,0,0];let zet=0,k0=0;
+  for(const p of P){
+    if(p.kl<0){zet++;continue;}assessed+=p.ha;if(p.kl===0){k0++;continue;}
+    const pr=priceOf(200),base=p.ha*pr.y*pr.p,e=base*kOf(p);
+    tot+=e;t25+=base*.25;t50+=base*.5;t100+=base;tN+=base*(p.k||0);ha+=p.ha;n++;byC[p.kl-1]++;byCha[p.kl-1]+=p.ha;byCe[p.kl-1]+=e;
+  }
+  $("k_eur").textContent=eur(tot);
+  $("k_eur_sub").textContent=`Prema NDVI: ${eur(tN)} · scenariji 25 / 50 / 100 %: ${eur(t25)} · ${eur(t50)} · ${eur(t100)}`;
+  $("k_ha").textContent=fmt(ha,1);$("k_n").textContent=fmt(n);
+  $("k_ext").textContent=fmt(DS.tuca.pojasHa,0);$("k_share").textContent=fmt(ha/assessed*100,1)+" %";
+  const mx=Math.max(...byC,1);
+  $("classBars").innerHTML=TCLS.map((c,i)=>`<div class="bar" style="grid-template-columns:150px 1fr 60px"><span><span class="sw" style="background:${c.h}"></span>${c.n.replace(/^Klasa \d – /,"klasa "+c.kl+": ")}</span><span class="track"><span class="fill" style="display:block;width:${byC[i]/mx*100}%;background:${c.h}"></span></span><span class="n">${fmt(byC[i])}</span></div>`).join("")+
+    `<p class="note">Bez izdvojenog pada: ${fmt(k0)} parcela. Požnjeveno između snimaka (nije ocijenjeno): ${fmt(zet)} parcela.</p>`;
+  let t=`<tr><th>JLS</th><th class="n">parcela</th><th class="n">ha</th><th class="n">šteta</th></tr>`;
+  TJ().forEach(([nm,b])=>t+=`<tr><td>${nm}</td><td class="n">${fmt(b.n)}</td><td class="n">${fmt(b.ha,1)}</td><td class="n">${eur(b.e)}</td></tr>`);
+  t+=`<tr><th>Ukupno</th><th class="n">${fmt(n)}</th><th class="n">${fmt(ha,1)}</th><th class="n">${eur(tot)}</th></tr>`;$("jlsTable").innerHTML=t;
+  let u=`<tr><th>Klasa</th><th class="n">parcela</th><th class="n">ha</th><th class="n">šteta</th></tr>`;
+  TCLS.forEach((c,i)=>u+=`<tr><td><span class="sw" style="background:${c.h}"></span>${c.n}</td><td class="n">${fmt(byC[i])}</td><td class="n">${fmt(byCha[i],1)}</td><td class="n">${eur(byCe[i])}</td></tr>`);
+  $("luTable").innerHTML=u;
+  if(S.colorBy==="e")restyle();
+  if(S.sel)renderParcel();
+}
+function renderParcelT(p){
+  $("parcelEmpty").hidden=true;$("parcelBox").hidden=false;
+  const pr=priceOf(200);
+  $("p_where").textContent=(p.j>=0?title(JLS[p.j]):"Pojas 5 km oko područja")+(p.toponim?" · "+title(p.toponim):"");
+  $("p_title").textContent="ARKOD "+p.id;
+  const c=p.kl>=1?TCLS[p.kl-1]:null;
+  $("p_pill").innerHTML=c?`<span class="pill" style="background:${c.h};color:${p.kl>=2?"#fff":"#1b1b1b"}">${c.n}</span>`:p.kl===0?`<span class="pill" style="background:#e3e6e8">klasa 0 – bez izdvojenog pada</span>`:`<span class="pill" style="background:#cfe3f1">žetva – nije ocijenjeno</span>`;
+  const z2=p.dndvi!=null&&p.kl>=0?(p.dndvi-TREF.med)/TREF.mad:null;
+  $("p_facts").innerHTML=`<dt>Vrsta uporabe</dt><dd>Oranica (200)</dd><dt>Površina parcele</dt><dd>${fmt(p.ha,4)} ha</dd><dt>Promjena NDVI (dNDVI)</dt><dd>${p.kl>=0&&p.dndvi!=null?fmt(p.dndvi,3):"–"}</dd><dt>z (referenca studenata)</dt><dd>${p.kl>=0&&p.z!=null?fmt(p.z,2):"–"}</dd><dt>z (oranice izvan pojasa)</dt><dd>${z2!=null?fmt(z2,2):"–"}</dd><dt>Udio parcele u pojasu tuče</dt><dd>${p.pojas!=null?fmt(p.pojas*100,0)+" %":"–"}</dd><dt>Piksela u ocjeni</dt><dd>${fmt(p.npx)}</dd><dt>Kultura (pretpostavka)</dt><dd>${pr.k}</dd>`;
+  const kk=kOf(p),e=p.ha*pr.y*pr.p*kk;
+  $("p_formula").innerHTML=p.kl>=1?`${fmt(p.ha,4)} ha × ${fmt(pr.y,1)} t/ha × ${fmt(pr.p,2)} €/t × ${fmt(kk*100)} %${S.loss==="ndvi"?" (gubitak prema NDVI)":""}<br>= <b>${fmt(e,2)} €</b>`:p.kl===0?"Pad NDVI-ja nije veći od uobičajenog (z > −1), šteta se ne procjenjuje.":"Parcela je požnjevena između dviju snimaka pa se tuča na njoj ne može procijeniti iz satelita.";
+  drawIdx(p);
+}
+function drawIdx(p){
+  const cv=$("sigT"),ctx=cv.getContext("2d"),W=cv.width,H=cv.height;ctx.clearRect(0,0,W,H);
+  const IX=["NDVI","NDRE","NDMI","MSAVI2","PSRI","BSI"],lo=-0.4,hi=1,pl=110,pr=30,pt=18,rowH=(H-pt-30)/IX.length;
+  const X=v=>pl+(Math.max(lo,Math.min(hi,v))-lo)/(hi-lo)*(W-pl-pr);
+  ctx.font="19px "+cssVar("--f-mono");ctx.strokeStyle=cssVar("--line");ctx.fillStyle=cssVar("--muted");
+  for(let v=-0.25;v<=1.001;v+=0.25){ctx.beginPath();ctx.moveTo(X(v),pt);ctx.lineTo(X(v),H-28);ctx.stroke();ctx.fillText(fmt(v,2),X(v)-22,H-6);}
+  IX.forEach((ix,i)=>{
+    const y=pt+rowH*(i+.5),a=p[ix+"_prije"],b=p[ix+"_poslije"];
+    ctx.fillStyle=cssVar("--ink");ctx.font="600 19px "+cssVar("--f-mono");ctx.fillText(ix,8,y+6);
+    if(a==null||b==null)return;
+    const bad=(ix==="PSRI"||ix==="BSI")?b>a:b<a;
+    ctx.strokeStyle=bad?"#ec5b38":cssVar("--ok");ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(X(a),y);ctx.lineTo(X(b),y);ctx.stroke();
+    ctx.fillStyle="#9aa7ae";ctx.beginPath();ctx.arc(X(a),y,7,0,7);ctx.fill();
+    ctx.fillStyle=bad?"#ec5b38":cssVar("--ok");ctx.beginPath();ctx.arc(X(b),y,8,0,7);ctx.fill();
+  });
+  ctx.fillStyle=cssVar("--muted");ctx.font="17px "+cssVar("--f-mono");ctx.fillText("● siva: 22. 6.   ● boja: 7. 7.",W-340,14);
+}
+function csvAllT(){
+  const IX=["NDVI","NDRE","NDMI","MSAVI2","PSRI","BSI"];
+  const rows=[["arkod_id","jls","toponim","povrsina_ha","klasa","dndvi","z_studenti","z_izvan_pojasa","udio_u_pojasu"].concat(IX.flatMap(i=>[i.toLowerCase()+"_22_6",i.toLowerCase()+"_7_7"])).concat(["kultura","prinos_t_ha","cijena_eur_t","gubitak_prinosa","steta_eur"]).join(";")];
+  const o2=(v,d)=>v==null?"":n2(v,d),pr=priceOf(200);
+  for(const p of P){if(p.kl<1)continue;rows.push([p.id,p.j>=0?JLS[p.j]:"pojas 5 km",p.toponim,n2(p.ha,4),p.kl,o2(p.dndvi,4),o2(p.z,2),o2((p.dndvi-TREF.med)/TREF.mad,2),o2(p.pojas,2)].concat(IX.flatMap(i=>[o2(p[i+"_prije"],3),o2(p[i+"_poslije"],3)])).concat([pr.k,n2(pr.y,2),n2(pr.p,2),n2(kOf(p),2),n2(dmg(p),2)]).join(";"));}
+  return rows.join("\r\n");
+}
+function loadHail(){
+  if(tLoaded)return tLoaded;
+  $("loading").hidden=false;$("loading").textContent="Učitavanje podataka o tuči…";
+  tLoaded=Promise.all(["data/tuca/meta.json","data/tuca/parcele.json","data/tuca/pojas.json","data/tuca/jls.geojson"].map(u=>fetch(u).then(r=>{if(!r.ok)throw new Error(u);return r.json();})))
+  .then(([meta,par,poj,jls])=>{
+    TMETA=meta;TREF=par.ref_izvan_pojasa;
+    const F=par.fields,TP=par.props.map((a,i)=>{const o={};F.forEach((f,k)=>o[f]=a[k]);o.lu=200;o.top=o.toponim;o.ll=toLatLngs(par.geoms[i],par.scale);return o;});
+    DS.tuca={P:TP,FP:TP.filter(p=>p.kl>=1),JLS:par.jls,pojasHa:poj.props.reduce((s,a)=>s+a[0],0)};
+    tParLayer=L.layerGroup(TP.map(p=>{const l=L.polygon(p.ll,tStyle(p));l.p=p;l.on("click",()=>selectParcel(p,false));return l;}));
+    pojasLayer=L.layerGroup(poj.geoms.map(g=>L.polygon(toLatLngs(g,poj.scale),{renderer:canvasR,color:"#ffffff",weight:1.2,fill:false,interactive:false})));
+    tdLayer=L.imageOverlay("data/tuca/dndvi.webp",meta.bounds,{pane:"floodext",interactive:false,opacity:.9});
+    eswdLayer=L.layerGroup(meta.eswd.map(e=>L.circleMarker([e.lat,e.lon],{renderer:canvasR,radius:9,color:"#ffffff",weight:2,fillColor:"#3fd2ff",fillOpacity:1}).bindTooltip(`ESWD: tuča ${fmt(e.promjer_cm,1)} cm, ${e.vrijeme} (${e.qc})`)));
+    tJlsLayer=L.geoJSON(jls,{style:{color:"#ffffff",weight:2,dashArray:"6 4",fill:false,renderer:canvasR},interactive:false});
+    [["l_tpar",tParLayer],["l_pojas",pojasLayer],["l_tdndvi",tdLayer],["l_eswd",eswdLayer]].forEach(([id,l])=>$(id).onchange=e=>{if(HZ!=="tuca")return;e.target.checked?l.addTo(map):map.removeLayer(l);legend();});
+        $("hailNote").innerHTML=`European Severe Weather Database (ESWD) bilježi za 1. 7. 2024. oko 17:10 UTC više prijava tuče promjera 4,5–6,5 cm u Županji i okolici (provjera kvalitete QC1; na karti je prikazana prijava s objavljenim koordinatama). Pojas oštećenja koji satelit neovisno izdvaja iz promjene vegetacije leži na istom području, istočno i jugoistočno od Županje, i tvori kompaktan trag, a ne raspršene parcele. Oblaci: 22. 6. ${fmt(meta.stats.oblaci_20240622,1)} %, 7. 7. ${fmt(meta.stats.oblaci_20240707,1)} % područja.`;
+    $("loading").hidden=true;
+  }).catch(err=>{$("loading").textContent="Podaci o tuči se nisu učitali: "+err.message;});
+  return tLoaded;
+}
+const BASES={poplava:[["s2b","Sentinel-2, 22. 5. 2023. (poslije poplave)"],["s2a","Sentinel-2, 5. 5. 2023. (prije poplave)"],["s2n","Sentinel-2, 12. 5. 2022. (normalna godina)"],["rgb","Sentinel-1 kompozit promjene (5.5. / 17.5.)"],["v05","Sentinel-1 VV, 5. 5. 2023. (prije)"],["v17","Sentinel-1 VV, 17. 5. 2023. (poplava)"],["v29","Sentinel-1 VV, 29. 5. 2023. (povlačenje)"],["dof","DGU digitalni ortofoto 2024 (WMS)"],["osm","OpenStreetMap"],["esri","Esri satelitska podloga"],["none","Bez podloge"]],
+  tuca:[["t07","Sentinel-2, 7. 7. 2024. (poslije tuče)"],["t22","Sentinel-2, 22. 6. 2024. (prije tuče)"],["dof","DGU digitalni ortofoto 2024 (WMS)"],["osm","OpenStreetMap"],["esri","Esri satelitska podloga"],["none","Bez podloge"]]};
+const HZTXT={poplava:{d:"Poplava Kupe i Korane, svibanj 2023. Karlovac, Duga Resa, Barilović, Lasinja i pojas od 3 km. Sentinel-1 i Sentinel-2.",kl:["ha poplavljeno unutar ARKOD parcela","pogođenih ARKOD parcela","ha ukupni obuhvat poplave","udio poplavljene ARKOD površine"],loss:"Gubitak prinosa na poplavljenom dijelu",cls:"Parcele po razredu poplavljenosti",lu:"Po vrsti uporabe zemljišta",q:"ARKOD ID, npr. 3593093"},
+  tuca:{d:"Tuča 1. 7. 2024., Gradište, Županja i Štitar. Sentinel-2 prije (22. 6.) i poslije (7. 7. 2024.), ARKOD oranice.",kl:["ha oranica u klasama štete 1–3","oštećenih ARKOD oranica","ha pojas tuče (dNDVI)","udio oštećene površine u ocijenjenim oranicama"],loss:"Gubitak prinosa na oštećenim oranicama",cls:"Oranice po klasi štete",lu:"Po klasi štete",q:"ARKOD ID, npr. 3143495"}};
+function setHazard(h){
+  if(h===HZ)return;
+  const go=()=>{
+    if(swipeOn)toggleSwipe();
+    const fl=[floodLayer,fpLayer,opLayer,jlsLayer,rivLayer,thrOverlay,ovD,ovW,ovC],hl=[tParLayer,pojasLayer,tdLayer,eswdLayer,tJlsLayer];
+    if(h==="tuca"){DS.poplava=DS.poplava||{P,FP,JLS};fl.forEach(l=>l&&map.hasLayer(l)&&map.removeLayer(l));}
+    else hl.forEach(l=>l&&map.hasLayer(l)&&map.removeLayer(l));
+    HZ=h;document.body.dataset.hz=h;({P,FP,JLS}=DS[h]);
+    S.sel=null;if(selLayer)map.removeLayer(selLayer);$("parcelEmpty").hidden=false;$("parcelBox").hidden=true;
+    $("hzSel").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.hz===h));
+    const T=HZTXT[h];$("hzDesc").textContent=T.d;["kl_ha","kl_n","kl_ext","kl_share"].forEach((id,i)=>$(id).textContent=T.kl[i]);
+    $("lossTitle").textContent=T.loss;$("colorby").options[0].textContent=h==="tuca"?"Klasa štete":"Razred poplavljenosti";$("classTitle").textContent=T.cls;$("luTitle").textContent=T.lu;$("q").placeholder=T.q;
+    $("base").innerHTML=BASES[h].map(([v,t])=>`<option value="${v}">${t}</option>`).join("");setBase(BASES[h][0][0]);
+    if(h==="tuca"){[["l_tpar",tParLayer],["l_pojas",pojasLayer],["l_tdndvi",tdLayer],["l_eswd",eswdLayer],["l_jls",tJlsLayer]].forEach(([id,l])=>{if($(id).checked)l.addTo(map);});map.fitBounds(tJlsLayer.getBounds(),{padding:[20,20]});}
+    else{[["l_flood",floodLayer],["l_fp",fpLayer],["l_jls",jlsLayer],["l_riv",rivLayer],["l_dndvi",ovD],["l_s2w",ovW],["l_cloud",ovC],["l_thr",thrOverlay]].forEach(([id,l])=>{if(l&&$(id).checked)l.addTo(map);});map.fitBounds(jlsLayer.getBounds(),{padding:[20,20]});$("k_ext").textContent=fmt(DS.poplava.ext,0);}
+    if(document.querySelector('nav.tabs button[aria-selected="true"]').dataset.tab==="prag"&&h==="tuca")showTab("pregled");
+    renderPrices();recompute();legend();renderRel();
+    try{history.replaceState(null,"","#"+h);}catch(e){}
+  };
+  if(h==="tuca")loadHail().then(()=>{if(DS.tuca)go();});else go();
+}
+$("hzSel").addEventListener("click",e=>{const b=e.target.closest("button");if(b)setHazard(b.dataset.hz);});
+$("l_jls").onchange=e=>{const l=HZ==="tuca"?tJlsLayer:jlsLayer;e.target.checked?l.addTo(map):map.removeLayer(l);};
+
+// ---------- naslovnica ----------
+document.querySelectorAll(".hcard").forEach(b=>b.onclick=()=>{$("home").hidden=true;map.invalidateSize();if(b.dataset.go!==HZ)setHazard(b.dataset.go);else{try{history.replaceState(null,"","#"+HZ);}catch(e){}}});
+$("homeBtn").onclick=()=>{$("home").hidden=false;$("home").scrollTop=0;try{history.replaceState(null,"","#");}catch(e){}};
+
+// ---------- pouzdanost ----------
+let VAL=null;
+const pc=v=>v==null?"–":fmt(v*100,0)+" %";
+function cmTable(m,rowLab,colLab,unit){
+  return `<div class="tablewrap"><table class="cm"><tr><th></th><th>${colLab[0]}</th><th>${colLab[1]}</th></tr>
+  <tr><th>${rowLab[0]}</th><td class="ok">${fmt(m.tp*(unit||1),unit?0:0)}</td><td class="bad">${fmt(m.fp*(unit||1),0)}</td></tr>
+  <tr><th>${rowLab[1]}</th><td class="bad">${fmt(m.fn*(unit||1),0)}</td><td class="ok">${fmt(m.tn*(unit||1),0)}</td></tr></table></div>
+  <div class="metrics"><span>ukupna podudarnost ${pc(m.oa)}</span><span>kappa ${fmt(m.kappa,2)}</span><span>preciznost ${pc(m.preciznost)}</span><span>odziv ${pc(m.odziv)}</span></div>`;
+}
+function renderRel(){
+  if(!VAL)return;const v=VAL;let h="";
+  if(HZ==="poplava"){
+    const px=v.poplava_pikseli,pa=v.poplava_parcele,pr=v.poplava_prag;
+    h+=`<div style="display:grid;gap:8px"><h3>1. Radar prema optici, po parcelama</h3>
+      <p class="note">Redovi: radar Sentinel-1 (17. 5.), parcela poplavljena ako je pod vodom barem 10 %. Stupci: neovisna optika Sentinel-2 (22. 5.), parcela pogođena ako ima barem 10 % nove vode ili mokrog tla ili jak pad NDVI-ja (z &lt; −2). Parcele bez oblaka, ${fmt(pa.tp+pa.fp+pa.fn+pa.tn)} parcela.</p>
+      ${cmTable(pa,["radar: poplavljeno","radar: suho"],["optika: pogođeno","optika: bez znaka"])}
+      <p class="note"><b>Tumačenje.</b> ${pc(pa.preciznost)} parcela koje radar označi kao poplavljene ima i neovisan optički znak poplave, dakle radar rijetko daje lažnu poplavu. Odziv je niži jer optika gleda pet dana kasnije i reagira i na druge promjene: i ${pc(v.poplava_lazni_alarm_kontrola)} nepoplavljenih parcela ima jednako jak optički signal (košnja, sjetva, kiša), što je razina lažnog alarma same optike.</p></div>
+      <div style="display:grid;gap:8px"><h3>2. Radar prema optici, po pikselima (20 m)</h3>
+      <p class="note">Unutar ARKOD parcela, bez oblaka na obje optičke snimke. Referenca: nova voda ili mokro tlo 22. 5. (MNDWI &gt; 0 ili SCL voda, a 5. 5. suho). Vrijednosti su u hektarima.</p>
+      ${cmTable(px,["radar: voda","radar: suho"],["optika: nova voda","optika: suho"],px.ha_po_pikselu)}
+      <p class="note">Podudarnost po pikselima je umjerena (kappa ${fmt(px.kappa,2)}) jer se voda između 17. i 22. 5. povlačila, a rubovi poplave pomiču. Zato je pravo mjerilo usporedba po parcelama iznad.</p></div>
+      <div style="display:grid;gap:8px"><h3>3. Osjetljivost na prag</h3>
+      <div class="bars">${Object.entries(pr).map(([k,x])=>`<div class="bar" style="grid-template-columns:190px 1fr 80px"><span>${k}</span><span class="track"><span class="fill" style="display:block;width:${x/pr["blago (-14 / -2)"]*100}%;background:var(--water)"></span></span><span class="n">${fmt(x,0)} ha</span></div>`).join("")}</div>
+      <p class="note">Obuhvat poplave ovisi o pragu: od oko ${fmt(pr["strogo (-19 / -5)"],0)} ha (strogo) do ${fmt(pr["blago (-14 / -2)"],0)} ha (blago). Odabrano pravilo leži između, a Otsuova metoda (kartica Prag detekcije) neovisno daje sličan prag. Uvjet povlačenja vode uklanja oko ${fmt(pr["pravilo bez uvjeta povlačenja"]-pr["pravilo (-16 / -3 / +3)"],0)} ha stalnih voda i trajno mokrih površina.</p></div>`;
+  }else{
+    const a=v.tuca_indeksi_ista_referenca,m=v.tuca_referenca_matrica,r=v.tuca_raspon;
+    h+=`<div style="display:grid;gap:8px"><h3>1. NDVI prema neovisnim pojasevima (po parcelama)</h3>
+      <p class="note">Je li šteta vidljiva i u drugim dijelovima spektra? Redovi: pad NDVI-ja (crveni i NIR pojas). Stupci: pad NDRE-a (red edge, B05) odnosno NDMI-ja (kratkovalni IC, B11, vlaga u listu). Za sve indekse ista referenca (oranice izvan pojasa), granica z &lt; −1.</p>
+      <b style="font-size:13px">NDRE</b>${cmTable(a.NDRE,["NDVI: pad","NDVI: bez pada"],["NDRE: pad","NDRE: bez pada"])}
+      <b style="font-size:13px">NDMI</b>${cmTable(a.NDMI,["NDVI: pad","NDVI: bez pada"],["NDMI: pad","NDMI: bez pada"])}
+      <p class="note"><b>Tumačenje.</b> Tri neovisna spektralna mjerenja vrlo se dobro slažu (kappa ${fmt(a.NDRE.kappa,2)} i ${fmt(a.NDMI.kappa,2)}): oštećenje vegetacije je stvarno i nije artefakt jednog indeksa.</p></div>
+      <div style="display:grid;gap:8px"><h3>2. Osjetljivost na izbor referentnih parcela</h3>
+      <p class="note">Redovi: klase studenata (referenca μ = −0,024, σ = 0,185). Stupci: klase uz referencu samo iz oranica izvan pojasa tuče (μ = ${fmt(VAL&&TREF?TREF.med:0.055,3)}, σ = ${fmt(TREF?TREF.mad:0.066,3)}).</p>
+      <div class="tablewrap"><table class="cm"><tr><th></th><th>0</th><th>1</th><th>2</th><th>3</th></tr>${m.redovi_studenti_stupci_izvan_pojasa.map((row,i)=>`<tr><th>klasa ${i}</th>${row.map((x,j)=>`<td class="${i===j?"ok":x?"bad":""}">${fmt(x)}</td>`).join("")}</tr>`).join("")}</table></div>
+      <p class="note"><b>Ovo je najveći izvor nesigurnosti.</b> Uz strožu referencu studenata oštećeno je ${fmt(r.ha_studenti,0)} ha (oko ${fmt(r.eur_studenti_kukuruz/1e6,1)} mil. €), a uz referencu izvan pojasa ${fmt(r.ha_izvan_pojasa,0)} ha (oko ${fmt(r.eur_izvan_pojasa_kukuruz/1e6,1)} mil. €, kukuruz). Aplikacija prikazuje konzervativnu procjenu studenata; stvarna šteta vjerojatno je između. Dio razlike su različiti usjevi: kukuruz izvan pojasa još raste, a pšenica u pojasu sazrijeva.</p></div>
+      <div style="display:grid;gap:8px"><h3>3. Potvrda događaja</h3>
+      <p class="note">Prijava tuče u bazi ESWD (4,5 cm, 1. 7. 2024. 17:10 UTC, QC1) nalazi se ${fmt(v.tuca_eswd_udaljenost_m[0],0)} m od satelitski izdvojenog pojasa tuče. Datum, mjesto i trag oštećenja se slažu.</p></div>`;
+  }
+  $("relBox").innerHTML=h;
+  $("sampleNote").textContent=HZ==="poplava"?"Slučajni uzorak od 15 parcela po razredu poplavljenosti (0–4), s koordinatama središta. Na terenu ili na ortofotu upiše se je li bilo štete, a iz toga nastaje prava matrica konfuzije.":"Slučajni uzorak od 15 oranica po klasi štete (0–3), s koordinatama središta. Na terenu se upiše je li bilo štete od tuče, a iz toga nastaje prava matrica konfuzije.";
+}
+function sampleCsv(){
+  let seed=20261109;const rnd=()=>(seed=(seed*1103515245+12345)%2147483648)/2147483648;
+  const groups=HZ==="poplava"?[0,1,2,3,4].map(r=>P.filter(p=>(p.r||0)===r&&(r>0||p.fha<=0))):[0,1,2,3].map(k=>P.filter(p=>p.kl===k));
+  const rows=["arkod_id;"+(HZ==="poplava"?"razred_poplavljenosti":"klasa_stete")+";jls;lat;lon;satelit_procjena;teren_steta_da_ne;napomena"];
+  groups.forEach((g,gi)=>{const a=g.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+    a.slice(0,15).forEach(p=>{const c=L.polygon(p.ll).getBounds().getCenter();rows.push([p.id,gi,p.j>=0?JLS[p.j]:"pojas",c.lat.toFixed(6),c.lng.toFixed(6),gi>0?"steta":"bez_stete","",""].join(";"));});});
+  return rows.join("\r\n");
+}
+$("dlSample").onclick=()=>download(HZ==="tuca"?"tuca_uzorak_teren.csv":"poplava_uzorak_teren.csv",sampleCsv());
+$("cpSample").onclick=()=>{const t=sampleCsv();if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>toast("Uzorak kopiran."),()=>toast("Kopiranje nije uspjelo."));};
+
+// ---------- CSV ----------
+const n2=(v,d)=>v.toFixed(d).replace(".",",");
+function csvAll(){
+  if(HZ==="tuca")return csvAllT();
+  const rows=[["arkod_id","jls","vrsta_uporabe_sifra","vrsta_uporabe","toponim","povrsina_ha","poplavljeno_ha","poplavljenost_posto","razred","ndvi_2022_05_12","ndvi_2023_05_05","ndvi_2023_05_22","ndvi_odstupanje_z","voda_mokro_22_5_udio","kultura","prinos_t_ha","cijena_eur_t","gubitak_prinosa","steta_eur"].join(";")];
+  const o2=(v,d)=>v==null?"":n2(v,d);
+  for(const p of FP){const pr=priceOf(p.lu),o=p.o||{};rows.push([p.id,p.j>=0?JLS[p.j]:"pojas 3 km",p.lu,LU[p.lu]||"",p.top,n2(p.ha,4),n2(p.fha,4),n2(p.pct,1),p.r,o2(o.ndvi22,3),o2(o.n05,3),o2(o.n22b,3),o2(o.z,2),o2(o.voda22,2),pr.k,n2(pr.y,2),n2(pr.p,2),n2(kOf(p),2),n2(dmg(p),2)].join(";"));}
+  return rows.join("\r\n");
+}
+function csvJls(){
+  if(HZ==="tuca"){const rows=["jls;broj_ostecenih_parcela;ostecena_povrsina_ha;steta_eur"];TJ().forEach(([nm,b])=>rows.push([nm,b.n,n2(b.ha,2),n2(b.e,2)].join(";")));return rows.join("\r\n");}
+  const rows=["jls;broj_parcela;poplavljeno_ha;steta_eur"];
+  JLS.forEach((nm,i)=>{const b=S._byJ[i];rows.push([nm,b.n,n2(b.ha,2),n2(b.e,2)].join(";"));});
+  rows.push(["pojas 3 km",S._out.n,n2(S._out.ha,2),n2(S._out.e,2)].join(";"));return rows.join("\r\n");
+}
+let DL=null;
+if(window.claude&&window.claude.use)window.claude.use("downloads").then(d=>DL=d).catch(()=>{});
+function download(name,text){
+  const data="\ufeff"+text;
+  if(DL){DL.save({filename:name,data}).then(()=>toast("CSV spremljen.")).catch(e=>{if(e&&e.code!=="declined")toast("Preuzimanje nije uspjelo. Upotrijebite „Kopiraj CSV”.");});return;}
+  if(window.claude){toast("Preuzimanje ovdje nije dostupno. Upotrijebite „Kopiraj CSV”.");return;}
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type:"text/csv;charset=utf-8"}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);
+}
+function copyCsv(){
+  const t=csvAll(),ta=$("csvOut");
+  const fallback=()=>{ta.hidden=false;ta.value=t;ta.focus();ta.select();toast("CSV je označen. Kopirajte ga s Ctrl+C.");};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(()=>toast("CSV kopiran ("+FP.length+" parcela). Zalijepite ga u Excel."),fallback);else fallback();
+}
+let toastT;function toast(m){const t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,3500);}
+
+// ---------- tablica cijena ----------
+function renderPrices(){
+  const used=new Set(P.map(p=>p.lu));
+  let h=`<tr><th>Vrsta uporabe</th><th>Kultura</th><th class="n">t/ha</th><th class="n">€/t</th></tr>`;
+  Object.keys(DEF).filter(k=>used.has(+k)||k==="200").forEach(k=>{
+    const pr=S.prices[k];
+    const kult=k==="200"?`<select data-crop aria-label="Kultura na oranicama">${Object.entries(CROPS).map(([id,c])=>`<option value="${id}" ${pr.crop===id?"selected":""}>${c.n}</option>`).join("")}</select>`:`<span class="note">${pr.k}</span>`;
+    h+=`<tr data-lu="${k}"><td>${LU[k]} <span class="note">${k}</span></td><td>${kult}</td><td class="n"><input type="number" step="0.1" min="0" value="${pr.y}" data-f="y" aria-label="Prinos ${LU[k]}"></td><td class="n"><input type="number" step="0.01" min="0" value="${pr.p}" data-f="p" aria-label="Cijena ${LU[k]}"></td></tr>`;
+  });
+  $("priceTable").innerHTML=h;
+}
+$("priceTable").addEventListener("input",e=>{
+  const tr=e.target.closest("tr");if(!tr)return;const lu=tr.dataset.lu,pr=S.prices[lu];
+  if(e.target.dataset.crop!==undefined){const c=CROPS[e.target.value];Object.assign(pr,{crop:e.target.value,k:c.n,y:c.y,p:c.p});renderPrices();}
+  else{const v=parseFloat(e.target.value);if(!isNaN(v)&&v>=0)pr[e.target.dataset.f]=v;}
+  recompute();
+});
+$("resetPrices").onclick=()=>{resetPrices(false);renderPrices();recompute();toast("Vraćene cijene 2026./2027.");};
+$("oldPrices").onclick=()=>{resetPrices(true);renderPrices();recompute();toast("Cijene 2025./2026. Kukuruz 166,65 €/t, kao u ArcGIS analizi.");};
+
+// ---------- UI ----------
+function showTab(t){
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===t));
+  document.querySelectorAll("section.pane").forEach(s=>s.hidden=s.id!=="pane-"+t);
+  if(t==="prag")loadRaster().then(()=>{runThreshold();}).catch(()=>$("thrStatus").textContent="Rasterski podaci nisu se učitali.");
+}
+document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+$("lossSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.loss=b.dataset.loss==="ndvi"?"ndvi":+b.dataset.loss;$("lossSeg").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));recompute();});
+["t1","t2","t3"].forEach(id=>$(id).addEventListener("input",scheduleThr));$("useRec").onchange=scheduleThr;
+document.querySelectorAll("[data-preset]").forEach(b=>b.onclick=()=>{const [a,c,d,r]=b.dataset.preset.split(",").map(Number);$("t1").value=a;$("t2").value=c;$("t3").value=d;$("useRec").checked=!!r;$("l_thr").checked=true;loadRaster().then(runThreshold);});
+$("otsu").onclick=()=>loadRaster().then(()=>{buildHist();const t=otsu();$("t1").value=Math.round(t*2)/2;$("l_thr").checked=true;runThreshold();toast("Otsuov prag za VV 17. 5.: "+fmtDb(t)+" (ručni prag u analizi: −16 dB)");});
+$("l_thr").onchange=e=>{if(!thrOverlay){if(e.target.checked){showTab("prag");}return;}e.target.checked?thrOverlay.addTo(map):map.removeLayer(thrOverlay);};
+$("lyrToggle").onclick=()=>{const m=$("lyrMore");m.classList.toggle("open");$("lyrToggle").textContent=m.classList.contains("open")?"Sakrij":"Prikaži";};
+$("dlCsv").onclick=()=>download(HZ==="tuca"?"tuca_zupanja_2024_parcele.csv":"poplava_karlovac_2023_parcele.csv",csvAll());
+$("dlJls").onclick=()=>download(HZ==="tuca"?"tuca_zupanja_2024_jls.csv":"poplava_karlovac_2023_jls.csv",csvJls());
+$("cpCsv").onclick=copyCsv;
+$("zoomP").onclick=()=>{if(selLayer)map.fitBounds(selLayer.getBounds(),{maxZoom:17,padding:[40,40]});};
+function search(){const v=$("q").value.trim().replace(/\D/g,"");if(!v)return;const p=P.find(x=>String(x.id)===v);if(!p){toast("Parcela "+v+" nije u području obrade.");return;}selectParcel(p,true);}
+$("qbtn").onclick=search;$("q").addEventListener("keydown",e=>{if(e.key==="Enter")search();});
+$("base").onchange=e=>{if(swipeOn)toggleSwipe();setBase(e.target.value);};
+$("colorby").onchange=e=>{S.colorBy=e.target.value;restyle();legend();};
+function restyle(){const L_=HZ==="tuca"?tParLayer:fpLayer;if(L_)L_.eachLayer(l=>l.setStyle(fpStyle(l.p)));}
+function toggle(id,layer,cond){$(id).onchange=e=>{if(e.target.checked)layer.addTo(map);else map.removeLayer(layer);};}
+
+// ---------- učitavanje ----------
+Promise.all(["data/raster_meta.json","data/parcele.json","data/poplava.json","data/jls.geojson","data/rijeke.geojson","data/optika.json"].map(u=>fetch(u).then(r=>{if(!r.ok)throw new Error(u);return r.json();})))
+.then(([meta,par,pop,jls,riv,opt])=>{
+  OPT=opt;
+  rasterMeta=meta;JLS=par.jls;
+  const F=par.fields;
+  P=par.props.map((a,i)=>{const o={};F.forEach((f,k)=>o[f]=a[k]);o.top=o.toponim;o.ll=toLatLngs(par.geoms[i],par.scale);return o;});
+  FP=P.filter(p=>p.fha>0);
+  const OF=opt.fields,oi={};opt.rows.forEach(r=>{const o={};OF.forEach((f,k)=>o[f]=r[k]);o.n05=o.ndvi05f!=null?o.ndvi05f:o.ndvi05;o.n22b=o.ndvi22bf!=null?o.ndvi22bf:o.ndvi22b;oi[o.id]=o;});
+  P.forEach(p=>{if(oi[p.id])p.o=oi[p.id];});
+  $("base").innerHTML=BASES.poplava.map(([v,t])=>`<option value="${v}">${t}</option>`).join("");
+  setBase("s2b");
+  optLayers();renderCross();
+  floodLayer=L.layerGroup(pop.geoms.map(g=>L.polygon(toLatLngs(g,pop.scale),{pane:"floodext",renderer:canvasR,color:"#19b6d8",weight:1,fillColor:"#19b6d8",fillOpacity:.28,interactive:false}))).addTo(map);
+  fpLayer=L.layerGroup(FP.map(p=>{const l=L.polygon(p.ll,fpStyle(p));l.p=p;l.on("click",()=>selectParcel(p,false));return l;})).addTo(map);
+  opLayer=L.layerGroup(P.filter(p=>p.fha<=0).map(p=>{const l=L.polygon(p.ll,{pane:"others",renderer:canvasR,color:"#e9eef0",weight:.6,fillColor:"#e9eef0",fillOpacity:.06});l.on("click",()=>selectParcel(p,false));return l;}));
+  jlsLayer=L.geoJSON(jls,{style:{color:"#ffffff",weight:2,dashArray:"6 4",fill:false,renderer:canvasR},interactive:false}).addTo(map);
+  rivLayer=L.geoJSON(riv,{style:{color:"#7fe3ff",weight:2,renderer:canvasR},interactive:false});
+  toggle("l_flood",floodLayer);toggle("l_fp",fpLayer);toggle("l_riv",rivLayer);
+  const syncOthers=()=>{const want=HZ==="poplava"&&$("l_op").checked&&map.getZoom()>=11;if(want&&!map.hasLayer(opLayer))opLayer.addTo(map);if(!want&&map.hasLayer(opLayer))map.removeLayer(opLayer);};
+  $("l_op").onchange=()=>{syncOthers();if($("l_op").checked&&map.getZoom()<11)toast("Sve parcele prikazuju se od zuma 11. Približite kartu.");};
+  map.on("zoomend",syncOthers);
+  map.fitBounds(jlsLayer.getBounds(),{padding:[20,20]});
+  let ext=pop.props.reduce((s,a)=>s+a[0],0);$("k_ext").textContent=fmt(ext,0);
+  DS.poplava={P,FP,JLS,ext};
+  renderPrices();recompute();legend();
+  if(window.innerWidth>820)$("lyrMore").classList.add("open");
+  $("loading").hidden=true;
+  if(location.hash==="#tuca"){$("home").hidden=true;setHazard("tuca");}
+  else if(location.hash==="#poplava")$("home").hidden=true;
+  fetch("data/validacija.json").then(r=>r.json()).then(v=>{VAL=v;renderRel();}).catch(()=>{});
+}).catch(err=>{$("loading").textContent="Podaci se nisu učitali: "+err.message;});
+</script>
+
+</body>
+</html>
