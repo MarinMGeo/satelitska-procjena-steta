@@ -46,8 +46,9 @@ def read_raster(name, dtype=">f4"):
             m = np.unpackbits(np.frombuffer(d[n:n + bw * bh // 8], np.uint8)).reshape(bh, bw)
             v[m == 0] = np.nan
         arr[r * bh:(r + 1) * bh, c * bw:(c + 1) * bw] = v
-    cs = (b.emaxx - b.eminx) / W
-    return arr[:H, :W], from_origin(b.eminx, b.emaxy, cs, cs)
+    # eminx/emaxy su središta rubnih piksela
+    cs = (b.emaxx - b.eminx) / (W - 1)
+    return arr[:H, :W], from_origin(b.eminx - cs / 2, b.emaxy + cs / 2, cs, cs)
 
 
 def enc_geom(geom, scale=1e5):

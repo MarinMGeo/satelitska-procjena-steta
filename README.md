@@ -23,12 +23,18 @@ Rad za Datathon Portala otvorenih podataka 2026, izazov B (Okoliš i održivi pr
 - Alat **Prag detekcije** ponovno izračunava obuhvat poplave u pregledniku za bilo koje pragove. Uključuje i automatski prag po Otsuovoj metodi.
 - Izvoz u CSV (sve pogođene parcele ili zbroj po JLS) za Excel. Separator je točka-zarez, a decimalni znak zarez.
 
+## Alati
+
+Predobrada radarskih snimaka Sentinel-1 rađena je u ESA SNAP-u, a izvorna analiza u ArcGIS Pro. Cijeli postupak zatim je
+ponovljen u otvorenom kodu, u QGIS-u (skripte `pipeline/qgis_poplava.py` i `pipeline/qgis_tuca.py`). Detekcija poplave
+podudara se piksel po piksel, a klase štete od tuče u 98,6 % ocijenjenih parcela (`pipeline/USPOREDBA_QGIS_ARCGIS.md`).
+Za pokretanje i nadogradnju rješenja nije potreban komercijalni softver.
+
 ## Struktura
 
 ```
 docs/            gotova statička aplikacija (index.html + data/), objavljuje se na GitHub Pages
-pipeline/        Python skripta koja iz ArcGIS File Geodatabase rezultata izrađuje web podatke
-arcgis/          povijest geoprocesiranja iz ArcGIS Pro (izvorna analiza)
+pipeline/        obrada u QGIS-u (poplava, tuča), izvoz rezultata u web podatke, optika Sentinel-2, procjena pouzdanosti
 src/             izvorni HTML; build.py ga sastavlja u docs/index.html
 ```
 
@@ -45,14 +51,21 @@ Zatim otvorite `http://localhost:8000` u pregledniku.
 
 Za objavu na GitHub Pages: Settings → Pages → Source: *Deploy from a branch*, grana `main`, mapa `/docs`.
 
-Ponovna izrada podataka iz geobaze:
+Analiza u QGIS-u (3.28 ili noviji; na Windowsima iz OSGeo4W Shella):
+
+```
+python3 pipeline/qgis_poplava.py ulaz_poplava izlaz_poplava
+python3 pipeline/qgis_tuca.py <SAFE 22. 6. 2024.> <SAFE 7. 7. 2024.> jls_tuca.gpkg arkod_2024.gpkg izlaz_tuca
+```
+
+Ulazni podaci opisani su u zaglavlju svake skripte.
+
+Izvoz rezultata u web podatke (čita File Geodatabase preko GDAL-a, bez ArcGIS-a):
 
 ```
 pip install -r pipeline/requirements.txt
 python pipeline/izvoz_web_podataka.py "putanja/do/DATATHON_poplave.gdb" docs/data
 ```
-
-Skripta čita File Geodatabase izravno, bez ArcGIS-a: vektore preko GDAL-a, a rastere vlastitim čitačem blokova.
 
 Optički dio (Sentinel-2 L2A, pojasevi od 20 m: B03, B04, B8A, B11, SCL, TCI):
 
@@ -63,7 +76,7 @@ python pipeline/optika_sentinel2.py "mapa/sa/SAFE/produktima" "putanja/do/DATATH
 ## Tuča (Županja, 1. 7. 2024.)
 
 1. Sentinel-2 L2A (T33TYL) 22. 6. i 7. 7. 2024. Indeksi NDVI, NDRE, NDMI, MSAVI2, PSRI i BSI.
-2. Maska žetve (nizak NDVI prije ili golo tlo poslije), pa prag na dNDVI, zaglađivanje (Majority, RegionGroup) i poligon pojasa tuče.
+2. Maska žetve (nizak NDVI prije ili golo tlo poslije), pa prag na dNDVI, filtar većine, povezane skupine piksela i poligon pojasa tuče.
 3. ARKOD oranice suzene za 10 m. Zonalna statistika dNDVI-ja i z-vrijednost prema referentnim parcelama. Klase 1–3 za z ≤ −1, −2 i −3.
 4. Gubitak prinosa iz NDVI-ja u odnosu na oranice izvan pojasa tuče, cijene iz Registra šteta.
 5. Potvrda događaja: European Severe Weather Database (ESWD), tuča 4,5–6,5 cm, 1. 7. 2024. oko 17:10 UTC.
@@ -74,7 +87,7 @@ python pipeline/tuca_web.py klase_stete_rez Indeksi_i_delte jls.geojson mapa_sa_
 
 ## Metoda (poplava)
 
-1. Sentinel-1A GRD (IW, VV) za tri datuma iste putanje: kalibracija, filtriranje, terenska korekcija, pretvorba u dB, piksel 10 m, HTRS96/TM.
+1. Sentinel-1A GRD (IW, VV) za tri datuma iste putanje, u ESA SNAP-u: kalibracija, filtriranje, terenska korekcija, piksel 10 m, HTRS96/TM; zatim pretvorba u dB.
 2. Detekcija promjene. Piksel je poplavljen ako vrijede sva tri uvjeta:
    - VV na dan 17. 5. manji je od −16 dB;
    - pad u odnosu na 5. 5. veći je od 3 dB;
