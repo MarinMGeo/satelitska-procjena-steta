@@ -1,4 +1,4 @@
-# Satelitska procjena šteta: poplava i tuča
+# Prirodne nepogode iz satelita: geografska procjena šteta na poljoprivrednim parcelama
 
 Web aplikacija za procjenu štete od prirodnih nepogoda na poljoprivrednim (ARKOD) parcelama iz satelitskih snimaka Copernicus. Obrađena su dva događaja, a između njih se bira jednim klikom:
 
@@ -116,4 +116,7 @@ Kod je pod licencijom EUPL-1.2 (datoteka `LICENSE`). Podaci zadržavaju licencij
 
 ## Tim
 
-GEOtim2, Geografski odsjek, Prirodoslovno-matematički fakultet Sveučilišta u Zagrebu. Mentor: doc. dr. sc. Marin Mićunović.
+GEOtim2, Geografski odsjek, Prirodoslovno-matematički fakultet Sveučilišta u Zagrebu.
+
+- Studenti: Marin Hopek, Lucija Kuleš, Tina Pašalić i Ana Zubović (2. godina diplomskog studija geografije, smjer: istraživački)
+- Mentor: doc. dr. sc. Marin Mićunović
