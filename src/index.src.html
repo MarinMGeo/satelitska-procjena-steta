@@ -202,7 +202,7 @@ body:not([data-hz="tuca"]) .only-hail{display:none!important}
         <div class="body">
           <h2>Poplava</h2>
           <span class="sub">Kupa i Korana, svibanj 2023. · Karlovac, Duga Resa, Barilović, Lasinja</span>
-          <div class="nums"><div><b id="hp_n">3.892</b><small>poplavljenih parcela</small></div><div><b id="hp_ha">845 ha</b><small>pod vodom</small></div><div><b id="hp_e">330 tis. €</b><small>procjena prema NDVI</small></div></div>
+          <div class="nums"><div><b id="hp_n">3.901</b><small>poplavljenih parcela</small></div><div><b id="hp_ha">845 ha</b><small>pod vodom</small></div><div><b id="hp_e">329 tis. €</b><small>procjena prema NDVI</small></div></div>
           <span class="go">Otvori kartu poplave →</span>
         </div>
       </button>
@@ -211,7 +211,7 @@ body:not([data-hz="tuca"]) .only-hail{display:none!important}
         <div class="body">
           <h2>Tuča</h2>
           <span class="sub">1. 7. 2024. · Gradište, Županja, Štitar i pojas od 5 km</span>
-          <div class="nums"><div><b>987</b><small>oštećenih oranica</small></div><div><b>1.971 ha</b><small>u klasama 1–3</small></div><div><b>1,6 mil. €</b><small>procjena prema NDVI</small></div></div>
+          <div class="nums"><div><b>971</b><small>oštećenih oranica</small></div><div><b>1.935 ha</b><small>u klasama 1–3</small></div><div><b>1,6 mil. €</b><small>procjena prema NDVI</small></div></div>
           <span class="go">Otvori kartu tuče →</span>
         </div>
       </button>
@@ -424,9 +424,9 @@ body:not([data-hz="tuca"]) .only-hail{display:none!important}
           <li><b>Događaj.</b> Tuča 1. 7. 2024. oko 17:10 UTC, Županja i okolica. U European Severe Weather Database (ESWD, eswd.eu) prijavljeno je više tuča promjera 4,5–6,5 cm (provjera kvalitete QC1).</li>
           <li><b>Snimke.</b> Sentinel-2 L2A, pločica T33TYL, 22. 6. 2024. (prije) i 7. 7. 2024. (poslije), gotovo bez oblaka. Indeksi: NDVI, NDRE, NDMI, MSAVI2, PSRI i BSI, prije, poslije i njihova razlika.</li>
           <li><b>Maska žetve.</b> Između dviju snimaka žanju se pšenica i ječam, a pad NDVI-ja zbog žetve izgleda kao šteta. Pikseli s niskim NDVI-jem prije ili s golim tlom poslije (BSI) maskirani su, a parcele bez preostalih piksela označene su „nije ocijenjeno – žetva”.</li>
-          <li><b>Pojas tuče.</b> Prag na dNDVI, zaglađivanje (Majority) i povezivanje u cjeline (RegionGroup), pa pretvaranje u poligone.</li>
-          <li><b>Parcele.</b> ARKOD oranice suzene za 10 m prema unutra (rub ne kvari statistiku). Za svaku: srednji dNDVI, broj piksela i udio u pojasu tuče.</li>
-          <li><b>Klase.</b> z = (dNDVI − μ)/σ prema referentnim parcelama (μ = −0,024, σ = 0,185). Klasa 1 za z ≤ −1 (moguća šteta), 2 za z ≤ −2 (vjerojatna), 3 za z ≤ −3 (jaka). Za provjeru je izračunata i druga referenca, samo iz oranica izvan pojasa tuče.</li>
+          <li><b>Pojas tuče.</b> Pikseli s dNDVI ≤ −0,05, filtar većine (8 susjeda) protiv pojedinačnih piksela, povezane skupine od najmanje 50 piksela, pa pretvaranje u poligone.</li>
+          <li><b>Parcele.</b> ARKOD oranice suzene za 10 m prema unutra (rub ne kvari statistiku). Za svaku: srednji dNDVI, broj piksela, udio piksela ispod praga i srednja vrijednost svih šest indeksa.</li>
+          <li><b>Klase.</b> z = (dNDVI − μ)/σ, gdje su μ i σ srednja vrijednost i standardna devijacija svih ocijenjenih oranica (μ = −0,026, σ = 0,189). Klasa 1 za z ≤ −1 (moguća šteta), 2 za z ≤ −2 (vjerojatna), 3 za z ≤ −3 (jaka). Za provjeru je izračunata i druga referenca, samo iz oranica izvan pojasa tuče.</li>
           <li><b>Šteta.</b> Površina parcele × prinos × cijena iz Registra šteta × gubitak prinosa. Gubitak je ili izmjeren iz NDVI-ja (pad veći od uobičajenog na oranicama izvan pojasa, podijeljen s NDVI-jem prije, 0–100 %) ili zadan scenarijem.</li>
         </ol>
         <h3>Ograničenja</h3>
@@ -439,7 +439,7 @@ body:not([data-hz="tuca"]) .only-hail{display:none!important}
         </div>
         <div class="only-flood" style="display:grid;gap:14px">
         <ol class="steps">
-          <li><b>Snimke.</b> Sentinel-1A GRD, IW, polarizacija VV, tri datuma iste putanje: 5. 5. (prije poplave), 17. 5. (poplava, dan-dva nakon najvišeg vodostaja 15.–16. 5.) i 29. 5. 2023. (povlačenje). Kalibracija, filtriranje šuma i terenska korekcija, pretvorba u dB, piksel 10 m, HTRS96/TM.</li>
+          <li><b>Snimke.</b> Sentinel-1A GRD, IW, polarizacija VV, tri datuma iste putanje: 5. 5. (prije poplave), 17. 5. (poplava, dan-dva nakon najvišeg vodostaja 15.–16. 5.) i 29. 5. 2023. (povlačenje). Kalibracija, filtriranje šuma i terenska korekcija u ESA SNAP-u, pretvorba u dB u QGIS-u, piksel 10 m, HTRS96/TM.</li>
           <li><b>Detekcija promjene.</b> Piksel je poplavljen ako je VV na dan 17. 5. ispod −16 dB, ako je pao za više od 3 dB u odnosu na 5. 5. i ako je do 29. 5. ponovno porastao za više od 3 dB. Treći uvjet odbacuje stalne vodene površine, što je provjereno slojem JRC Global Surface Water.</li>
           <li><b>Čišćenje.</b> Rasterska maska pretvorena je u poligone i uklonjeni su dijelovi manji od 0,05 ha (šum radara, pojedinačni pikseli).</li>
           <li><b>Parcele.</b> Presjek s ARKOD parcelama 2024. Za svaku parcelu računa se poplavljena površina (ha), postotak poplavljenosti i razred: 1 (do 25 %), 2 (25–50 %), 3 (50–75 %), 4 (više od 75 %).</li>
@@ -462,11 +462,11 @@ body:not([data-hz="tuca"]) .only-hail{display:none!important}
         <ul class="steps only-flood">
           <li>Radar ne vidi vodu ispod gustog drveća i u izgrađenom području, pa obuhvat može biti podcijenjen uz šume i naselja.</li>
           <li>Optička snimka 22. 5. nastala je pet dana nakon radarske snimke poplave, kad se voda već povlačila, i oko 6 % područja prekrivaju oblaci. Za parcele pod oblacima gubitak prinosa nije izmjeren i uzima se 50 %.</li>
-          <li>Na oranicama koje su 5. 5. bile golo tlo NDVI ne može izmjeriti štetu (npr. trošak ponovne sjetve), pa se za 112 takvih parcela uzima 50 %. Ako je odstupanje NDVI-ja od kontrolnih parcela malo (z ≥ −1), izmjereni gubitak je 0 %.</li>
+          <li>Na oranicama koje su 5. 5. bile golo tlo NDVI ne može izmjeriti štetu (npr. trošak ponovne sjetve), pa se za 105 takvih parcela uzima 50 %. Ako je odstupanje NDVI-ja od kontrolnih parcela malo (z ≥ −1), izmjereni gubitak je 0 %.</li>
           <li>ARKOD ne bilježi usjev, pa je kultura na oranicama pretpostavka koju korisnik može promijeniti.</li>
           <li>Rezultat je stručna procjena za brzu orijentaciju i usmjeravanje terenskog očevida, a ne službeni nalaz povjerenstva.</li>
         </ul>
-        <p class="note">Alati: predobrada radarskih snimaka u ESA SNAP-u, izvorna analiza u ArcGIS Pro. Cijeli postupak ponovljen je u otvorenom kodu (QGIS, skripte u repozitoriju): detekcija poplave podudara se piksel po piksel, a klase štete od tuče u 98,6 % ocijenjenih parcela.</p>
+        <p class="note">Alati: sva obrada provedena je u softveru otvorenog koda, predobrada radarskih snimaka u ESA SNAP-u, a analiza u QGIS-u i Pythonu (skripte u repozitoriju). Postupak je prethodno testiran u ArcGIS Pro, s podudarnim rezultatima.</p>
         <p class="note">Otvoreni kod, licencija EUPL-1.2. Datathon Portala otvorenih podataka 2026, izazov B. Tim GEOtim2 (Marin Hopek, Lucija Kuleš, Tina Pašalić i Ana Zubović, studenti 2. godine diplomskog studija geografije, smjer: istraživački), Geografski odsjek PMF-a Sveučilišta u Zagrebu. Mentor: doc. dr. sc. Marin Mićunović.</p>
       </section>
     </div>
@@ -851,7 +851,7 @@ function renderParcelT(p){
   const c=p.kl>=1?TCLS[p.kl-1]:null;
   $("p_pill").innerHTML=c?`<span class="pill" style="background:${c.h};color:${p.kl>=2?"#fff":"#1b1b1b"}">${c.n}</span>`:p.kl===0?`<span class="pill" style="background:#e3e6e8">klasa 0 – bez izdvojenog pada</span>`:`<span class="pill" style="background:#cfe3f1">žetva – nije ocijenjeno</span>`;
   const z2=p.dndvi!=null&&p.kl>=0?(p.dndvi-TREF.med)/TREF.mad:null;
-  $("p_facts").innerHTML=`<dt>Vrsta uporabe</dt><dd>Oranica (200)</dd><dt>Površina parcele</dt><dd>${fmt(p.ha,4)} ha</dd><dt>Promjena NDVI (dNDVI)</dt><dd>${p.kl>=0&&p.dndvi!=null?fmt(p.dndvi,3):"–"}</dd><dt>z (referenca studenata)</dt><dd>${p.kl>=0&&p.z!=null?fmt(p.z,2):"–"}</dd><dt>z (oranice izvan pojasa)</dt><dd>${z2!=null?fmt(z2,2):"–"}</dd><dt>Udio parcele u pojasu tuče</dt><dd>${p.pojas!=null?fmt(p.pojas*100,0)+" %":"–"}</dd><dt>Piksela u ocjeni</dt><dd>${fmt(p.npx)}</dd><dt>Kultura (pretpostavka)</dt><dd>${pr.k}</dd>`;
+  $("p_facts").innerHTML=`<dt>Vrsta uporabe</dt><dd>Oranica (200)</dd><dt>Površina parcele</dt><dd>${fmt(p.ha,4)} ha</dd><dt>Promjena NDVI (dNDVI)</dt><dd>${p.kl>=0&&p.dndvi!=null?fmt(p.dndvi,3):"–"}</dd><dt>z (sve ocijenjene oranice)</dt><dd>${p.kl>=0&&p.z!=null?fmt(p.z,2):"–"}</dd><dt>z (oranice izvan pojasa)</dt><dd>${z2!=null?fmt(z2,2):"–"}</dd><dt>Udio parcele u pojasu tuče</dt><dd>${p.pojas!=null?fmt(p.pojas*100,0)+" %":"–"}</dd><dt>Piksela u ocjeni</dt><dd>${fmt(p.npx)}</dd><dt>Kultura (pretpostavka)</dt><dd>${pr.k}</dd>`;
   const kk=kOf(p),e=p.ha*pr.y*pr.p*kk;
   $("p_formula").innerHTML=p.kl>=1?`${fmt(p.ha,4)} ha × ${fmt(pr.y,1)} t/ha × ${fmt(pr.p,2)} €/t × ${fmt(kk*100)} %${S.loss==="ndvi"?" (gubitak prema NDVI)":""}<br>= <b>${fmt(e,2)} €</b>`:p.kl===0?"Pad NDVI-ja nije veći od uobičajenog (z > −1), šteta se ne procjenjuje.":"Parcela je požnjevena između dviju snimaka pa se tuča na njoj ne može procijeniti iz satelita.";
   drawIdx(p);
@@ -875,7 +875,7 @@ function drawIdx(p){
 }
 function csvAllT(){
   const IX=["NDVI","NDRE","NDMI","MSAVI2","PSRI","BSI"];
-  const rows=[["arkod_id","jls","toponim","povrsina_ha","klasa","dndvi","z_studenti","z_izvan_pojasa","udio_u_pojasu"].concat(IX.flatMap(i=>[i.toLowerCase()+"_22_6",i.toLowerCase()+"_7_7"])).concat(["kultura","prinos_t_ha","cijena_eur_t","gubitak_prinosa","steta_eur"]).join(";")];
+  const rows=[["arkod_id","jls","toponim","povrsina_ha","klasa","dndvi","z_sve_oranice","z_izvan_pojasa","udio_u_pojasu"].concat(IX.flatMap(i=>[i.toLowerCase()+"_22_6",i.toLowerCase()+"_7_7"])).concat(["kultura","prinos_t_ha","cijena_eur_t","gubitak_prinosa","steta_eur"]).join(";")];
   const o2=(v,d)=>v==null?"":n2(v,d),pr=priceOf(200);
   for(const p of P){if(p.kl<1)continue;rows.push([p.id,p.j>=0?JLS[p.j]:"pojas 5 km",p.toponim,n2(p.ha,4),p.kl,o2(p.dndvi,4),o2(p.z,2),o2((p.dndvi-TREF.med)/TREF.mad,2),o2(p.pojas,2)].concat(IX.flatMap(i=>[o2(p[i+"_prije"],3),o2(p[i+"_poslije"],3)])).concat([pr.k,n2(pr.y,2),n2(pr.p,2),n2(kOf(p),2),n2(dmg(p),2)]).join(";"));}
   return rows.join("\r\n");
@@ -963,9 +963,9 @@ function renderRel(){
       <b style="font-size:13px">NDMI</b>${cmTable(a.NDMI,["NDVI: pad","NDVI: bez pada"],["NDMI: pad","NDMI: bez pada"])}
       <p class="note"><b>Tumačenje.</b> Tri neovisna spektralna mjerenja vrlo se dobro slažu (kappa ${fmt(a.NDRE.kappa,2)} i ${fmt(a.NDMI.kappa,2)}): oštećenje vegetacije je stvarno i nije artefakt jednog indeksa.</p></div>
       <div style="display:grid;gap:8px"><h3>2. Osjetljivost na izbor referentnih parcela</h3>
-      <p class="note">Redovi: klase studenata (referenca μ = −0,024, σ = 0,185). Stupci: klase uz referencu samo iz oranica izvan pojasa tuče (μ = ${fmt(VAL&&TREF?TREF.med:0.055,3)}, σ = ${fmt(TREF?TREF.mad:0.066,3)}).</p>
-      <div class="tablewrap"><table class="cm"><tr><th></th><th>0</th><th>1</th><th>2</th><th>3</th></tr>${m.redovi_studenti_stupci_izvan_pojasa.map((row,i)=>`<tr><th>klasa ${i}</th>${row.map((x,j)=>`<td class="${i===j?"ok":x?"bad":""}">${fmt(x)}</td>`).join("")}</tr>`).join("")}</table></div>
-      <p class="note"><b>Ovo je najveći izvor nesigurnosti.</b> Uz strožu referencu studenata oštećeno je ${fmt(r.ha_studenti,0)} ha (oko ${fmt(r.eur_studenti_kukuruz/1e6,1)} mil. €), a uz referencu izvan pojasa ${fmt(r.ha_izvan_pojasa,0)} ha (oko ${fmt(r.eur_izvan_pojasa_kukuruz/1e6,1)} mil. €, kukuruz). Aplikacija prikazuje konzervativnu procjenu studenata; stvarna šteta vjerojatno je između. Dio razlike su različiti usjevi: kukuruz izvan pojasa još raste, a pšenica u pojasu sazrijeva.</p></div>
+      <p class="note">Redovi: klase uz referencu svih ocijenjenih oranica (μ = −0,026, σ = 0,189). Stupci: klase uz referencu samo iz oranica izvan pojasa tuče (μ = ${fmt(VAL&&TREF?TREF.med:0.055,3)}, σ = ${fmt(TREF?TREF.mad:0.066,3)}).</p>
+      <div class="tablewrap"><table class="cm"><tr><th></th><th>0</th><th>1</th><th>2</th><th>3</th></tr>${m.redovi_sve_stupci_izvan_pojasa.map((row,i)=>`<tr><th>klasa ${i}</th>${row.map((x,j)=>`<td class="${i===j?"ok":x?"bad":""}">${fmt(x)}</td>`).join("")}</tr>`).join("")}</table></div>
+      <p class="note"><b>Ovo je najveći izvor nesigurnosti.</b> Uz strožu referencu svih oranica oštećeno je ${fmt(r.ha_sve,0)} ha (oko ${fmt(r.eur_sve_kukuruz/1e6,1)} mil. €), a uz referencu izvan pojasa ${fmt(r.ha_izvan_pojasa,0)} ha (oko ${fmt(r.eur_izvan_pojasa_kukuruz/1e6,1)} mil. €, kukuruz). Aplikacija prikazuje konzervativnu procjenu; stvarna šteta vjerojatno je između. Dio razlike su različiti usjevi: kukuruz izvan pojasa još raste, a pšenica u pojasu sazrijeva.</p></div>
       <div style="display:grid;gap:8px"><h3>3. Potvrda događaja</h3>
       <p class="note">Prijava tuče u bazi ESWD (4,5 cm, 1. 7. 2024. 17:10 UTC, QC1) nalazi se ${fmt(v.tuca_eswd_udaljenost_m[0],0)} m od satelitski izdvojenog pojasa tuče. Datum, mjesto i trag oštećenja se slažu.</p></div>`;
   }
@@ -1031,7 +1031,7 @@ $("priceTable").addEventListener("input",e=>{
   recompute();
 });
 $("resetPrices").onclick=()=>{resetPrices(false);renderPrices();recompute();toast("Vraćene cijene 2026./2027.");};
-$("oldPrices").onclick=()=>{resetPrices(true);renderPrices();recompute();toast("Cijene 2025./2026. Kukuruz 166,65 €/t, kao u ArcGIS analizi.");};
+$("oldPrices").onclick=()=>{resetPrices(true);renderPrices();recompute();toast("Cijene 2025./2026. Kukuruz 166,65 €/t, kao u prvoj ekonomskoj analizi.");};
 
 // ---------- UI ----------
 function showTab(t){

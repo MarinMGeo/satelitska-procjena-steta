@@ -7,14 +7,14 @@ Nadopunjuje radarsku (Sentinel-1) detekciju:
      koeficijent gubitka prinosa za svaku poplavljenu ARKOD parcelu,
   3) izrađuje prikazne podloge u prirodnim bojama za web aplikaciju.
 
-Ispravke u odnosu na prvu ArcGIS verziju:
+Ispravke u odnosu na prvu probnu verziju:
   - od refleksije se oduzima BOA_ADD_OFFSET (-1000) za procesnu verziju N0400+,
   - maska oblaka uklanja samo SCL 0, 1, 3, 8, 9, 10, 11 (voda i neklasificirano ostaju),
   - NDVI = (B8A - B04) / (B8A + B04), voda iz NDVI-ja se ne izvodi,
   - sve se računa samo za područje istraživanja.
 
 Pokretanje:
-    python optika_sentinel2.py <mapa_s_tri_SAFE_produkta> <DATATHON_poplave.gdb> <izlazna_mapa_site_data>
+    python optika_sentinel2.py <mapa_s_tri_SAFE_produkta> <ulaz_poplava> <izlaz_poplava (qgis_poplava.py)> <docs/data>
 
 Licencija: EUPL-1.2
 """
@@ -26,17 +26,16 @@ from rasterio.features import rasterize
 from PIL import Image
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
-from izvoz_web_podataka_lib import read_raster, table_ids  # noqa: E402
+from izvoz_web_podataka_lib import qgis_poplava  # noqa: E402
 
-S2DIR, GDB, OUT = map(pathlib.Path, sys.argv[1:4])
+S2DIR, ULAZ, QOUT, OUT = map(pathlib.Path, sys.argv[1:5])
 DATES = {"d22": "20220512", "d05": "20230505", "d22b": "20230522"}
 LABEL = {"d22": "12. 5. 2022.", "d05": "5. 5. 2023.", "d22b": "22. 5. 2023."}
 CRS = "EPSG:3765"
 BAD_SCL = [0, 1, 3, 8, 9, 10, 11]
 
-IDS = table_ids(GDB)
-det, dt10 = read_raster(GDB, IDS, "S1A_VV_17_5_23_poplava_vremenska_detekcija", "u1")
-vv, vvt = read_raster(GDB, IDS, "S1A_VV_17_5_23_izrezano_dB")
+det, dt10, VV, par = qgis_poplava(ULAZ, QOUT)
+vv, vvt = VV["17"]
 H10, W10 = vv.shape
 # radni raster: 20 m, isti obuhvat kao radarski
 RES = 20.0
@@ -97,8 +96,6 @@ stats["dndvi_kontrola_median"] = float(np.median((nd22b - nd05)[ctrl]))
 print(json.dumps(stats, indent=1))
 
 # ---------- po parcelama ----------
-par = pyogrio.read_dataframe(GDB / f"{IDS['ARKOD_2024_ekonomski_scenarij']}.gdbtable")
-par["fha"] = par.SUM_poplava_ha_1.fillna(0)
 lab = rasterize(((g, i + 1) for i, g in enumerate(par.geometry)), out_shape=(H, W), transform=T, fill=0, dtype="int32")
 n = len(par) + 1
 

@@ -9,7 +9,7 @@ Bez terenskog očevida nema "prave" istine na terenu, pa se točnost procjenjuje
            osjetljivost na izbor referentnih parcela; položaj prijave tuče ESWD prema pojasu.
 Rezultat: validacija.json za aplikaciju.
 
-Pokretanje:  python validacija.py <S2_poplava_SAFE_mapa> <DATATHON_poplave.gdb> <docs/data>
+Pokretanje:  python validacija.py <S2_poplava_SAFE_mapa> <ulaz_poplava> <izlaz_poplava> <docs/data> <izlaz_tuca/pojas_tuce.gpkg>
 """
 import sys, json, glob, pathlib
 import numpy as np, pyogrio, rasterio, geopandas as gpd
@@ -19,9 +19,9 @@ from rasterio.features import rasterize
 from shapely.geometry import Point
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
-from izvoz_web_podataka_lib import read_raster, table_ids  # noqa
+from izvoz_web_podataka_lib import qgis_poplava  # noqa
 
-S2DIR, GDB, OUT = map(pathlib.Path, sys.argv[1:4])
+S2DIR, ULAZ, QOUT, OUT = map(pathlib.Path, sys.argv[1:5])
 CRS = "EPSG:3765"
 
 
@@ -42,11 +42,8 @@ def kappa_k(m):
 
 V = {}
 # ======================= POPLAVA =======================
-IDS = table_ids(GDB)
-det, dt10 = read_raster(GDB, IDS, "S1A_VV_17_5_23_poplava_vremenska_detekcija", "u1")
-v5, t5 = read_raster(GDB, IDS, "S1A_VV_5_5_23_izrezano_dB")
-v17, t17 = read_raster(GDB, IDS, "S1A_VV_17_5_23_izrezano_dB")
-v29, t29 = read_raster(GDB, IDS, "S1A_VV_29_5_23_izrezano_dB")
+det, dt10, VV, par = qgis_poplava(ULAZ, QOUT)
+(v5, t5), (v17, t17), (v29, t29) = VV["05"], VV["17"], VV["29"]
 H10, W10 = v17.shape; RES = 20.0; W, H = W10 // 2, H10 // 2; T = from_origin(t17.c, t17.f, RES, RES)
 
 
@@ -74,7 +71,6 @@ for k, d in {"05": "20230505", "22": "20230522"}.items():
     S[k] = {"ok": ok, "wet": ok & ((m > 0) | (scl == 6)), "ndvi": np.where(ok, nv, np.nan)}
 flood = to20(det, dt10) >= 0.5
 
-par = pyogrio.read_dataframe(GDB / f"{IDS['ARKOD_2024_ekonomski_scenarij']}.gdbtable")
 lab = rasterize(((g, i + 1) for i, g in enumerate(par.geometry)), out_shape=(H, W), transform=T, fill=0, dtype="int32")
 inA = lab > 0
 both = inA & S["05"]["ok"] & S["22"]["ok"]
@@ -98,9 +94,9 @@ v_ok = both & ~np.isnan(S["05"]["ndvi"]) & ~np.isnan(S["22"]["ndvi"])
 c2 = zsum(v_ok)
 dnd = np.divide(zsum(v_ok, S["22"]["ndvi"] - S["05"]["ndvi"]), c2, out=np.full(n, np.nan), where=c2 > 0)
 lu = np.r_[0, par.land_use_i.fillna(0).astype(int).values]
-fpct = np.r_[0, par.posto_poplavljenosti_filtri.fillna(0).values]
+fpct = np.r_[0, par.posto_poplavljenosti.fillna(0).values]
 s1 = fpct >= 10
-s1_none = np.r_[0, par.SUM_poplava_ha_1.fillna(0).values] == 0
+s1_none = np.r_[0, par.poplava_ha.fillna(0).values] == 0
 z = np.full(n, np.nan)
 for u in np.unique(lu[1:]):
     sel = (lu == u) & s1_none & ~np.isnan(dnd) & (c2 >= 3)
@@ -156,19 +152,19 @@ ha = np.array([p["ha"] for p in P]); n0 = np.array([p["NDVI_prije"] if p["NDVI_p
 dd = np.array([p["dndvi"] if p["dndvi"] is not None else np.nan for p in P]); r2 = T_["ref_izvan_pojasa"]
 zz2 = (dd - r2["med"]) / r2["mad"]
 kk = lambda sel: np.where(sel, np.clip(-(dd - r2["med"]) / np.maximum(n0, 0.15), 0, 1), 0)
-V["tuca_raspon"] = {"ha_studenti": float(ha[kl >= 1].sum()), "ha_izvan_pojasa": float(ha[assessed & (zz2 <= -1)].sum()),
-                    "eur_studenti_kukuruz": float(np.nansum(ha * 7.7 * 177.59 * kk(kl >= 1))),
+V["tuca_raspon"] = {"ha_sve": float(ha[kl >= 1].sum()), "ha_izvan_pojasa": float(ha[assessed & (zz2 <= -1)].sum()),
+                    "eur_sve_kukuruz": float(np.nansum(ha * 7.7 * 177.59 * kk(kl >= 1))),
                     "eur_izvan_pojasa_kukuruz": float(np.nansum(ha * 7.7 * 177.59 * kk(assessed & (zz2 <= -1))))}
-# klase: referenca studenata prema referenci izvan pojasa
+# klase: referenca sve ocijenjene oranice prema referenci izvan pojasa
 ref2 = T_["ref_izvan_pojasa"]
 d = np.array([p["dndvi"] if p["dndvi"] is not None else np.nan for p in P])
 z2 = (d - ref2["med"]) / ref2["mad"]
 kl2 = np.where(z2 <= -3, 3, np.where(z2 <= -2, 2, np.where(z2 <= -1, 1, 0)))
 m = np.zeros((4, 4), int)
 for a, b in zip(kl[assessed], kl2[assessed]): m[a, b] += 1
-V["tuca_referenca_matrica"] = {"redovi_studenti_stupci_izvan_pojasa": m.tolist(), "kappa": kappa_k(m), "podudarnost": float(np.trace(m) / m.sum())}
+V["tuca_referenca_matrica"] = {"redovi_sve_stupci_izvan_pojasa": m.tolist(), "kappa": kappa_k(m), "podudarnost": float(np.trace(m) / m.sum())}
 # ESWD prema pojasu
-poj = pyogrio.read_dataframe(sys.argv[4]) if len(sys.argv) > 4 else None
+poj = pyogrio.read_dataframe(sys.argv[5]) if len(sys.argv) > 5 else None
 meta = json.load(open(OUT / "tuca" / "meta.json"))
 if poj is not None:
     pt = gpd.GeoSeries([Point(e["lon"], e["lat"]) for e in meta["eswd"]], crs=4326).to_crs(poj.crs)

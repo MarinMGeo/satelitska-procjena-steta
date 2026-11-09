@@ -79,7 +79,7 @@ def main(ulaz, izlaz):
                    DATA_TYPE=6, OUTPUT=tmp(ime))["OUTPUT"]
 
     def presjek(*rasteri):
-        """Presjek obuhvata rastera, ishodište u donjem lijevom kutu, cijeli pikseli (kao Raster Calculator u ArcGIS-u)."""
+        """Presjek obuhvata rastera, ishodište u donjem lijevom kutu, cijeli pikseli."""
         E = [QgsRasterLayer(x, "e").extent() for x in rasteri]
         x0 = max(e.xMinimum() for e in E); y0 = max(e.yMinimum() for e in E)
         nx = round((min(e.xMaximum() for e in E) - x0) / PIKSEL); ny = round((min(e.yMaximum() for e in E) - y0) / PIKSEL)

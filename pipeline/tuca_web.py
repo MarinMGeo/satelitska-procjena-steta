@@ -1,76 +1,48 @@
 """
-Tuča, Gradište, Županja i Štitar, 1. 7. 2024.: izvoz rezultata ArcGIS analize u web podatke.
+Tuča, Gradište, Županja i Štitar, 1. 7. 2024.: izvoz rezultata analize u QGIS-u (qgis_tuca.py) u web podatke.
 
-Ulaz (rezultati studentske ArcGIS Pro analize, Sentinel-2 22. 6. i 7. 7. 2024.):
-  klase_stete_rez/ARKOD_parcele_konacne_klase.shp   oranice ARKOD, unutarnji pojas -10 m, zonalna statistika dNDVI, z, klasa
-  klase_stete_rez/Pojas_tuce_poligon_cisto.shp       pojas tuče (prag dNDVI, Majority, RegionGroup)
-  klase_stete_rez/dNDVI_konacno_bez_zetve.tif         dNDVI s maskiranom žetvom
-  Indeksi_i_delte/<INDEKS>_{prije,poslije}.tif        NDVI, NDRE, NDMI, MSAVI2, PSRI, BSI
-  jls.geojson                                         granice Gradišta, Županje i Štitara
+Ulaz:
+  <izlaz_qgis>/ARKOD_oranice_klase_stete.gpkg   oranice (unutarnji pojas -10 m): dNDVI, z, klasa, udio ispod praga, 6 indeksa
+  <izlaz_qgis>/pojas_tuce.gpkg                  pojas tuče
+  <izlaz_qgis>/dNDVI_oranice_bez_zetve.tif      dNDVI s maskiranom žetvom
+  jls.geojson / .gpkg                           granice Gradišta, Županje i Štitara
   dvije Sentinel-2 L2A SAFE mape (TCI_20m, SCL_20m) za prikaz u prirodnim bojama
 
 Pokretanje:
-    python tuca_web.py <klase_stete_rez> <Indeksi_i_delte> <jls.geojson> <mapa_sa_SAFE> <izlaz>
+    python tuca_web.py <izlaz_qgis> <jls> <mapa_sa_SAFE> <izlaz>
 
 Licencija: EUPL-1.2
 """
 import sys, json, glob, pathlib
 import numpy as np, pyogrio, rasterio, geopandas as gpd
 from rasterio.warp import reproject, Resampling, calculate_default_transform
-from rasterio.features import rasterize
 from pyproj import Transformer
 from PIL import Image
 
-KL, IDX, JLS, S2, OUT = map(pathlib.Path, sys.argv[1:6]); OUT.mkdir(parents=True, exist_ok=True)
+Q, JLS, S2, OUT = map(pathlib.Path, sys.argv[1:5]); OUT.mkdir(parents=True, exist_ok=True)
 CRS = "EPSG:3765"
 
-par = pyogrio.read_dataframe(KL / "ARKOD_parcele_konacne_klase.shp")
-pojas = pyogrio.read_dataframe(KL / "Pojas_tuce_poligon_cisto.shp")
+par = pyogrio.read_dataframe(Q / "ARKOD_oranice_klase_stete.gpkg")
+pojas = pyogrio.read_dataframe(Q / "pojas_tuce.gpkg")
 jls = gpd.read_file(JLS).to_crs(CRS)
-
-kmap = {"Klasa 0": 0, "Klasa 1": 1, "Klasa 2": 2, "Klasa 3": 3}
-par["kl"] = par.klasa_stet.fillna("").str[:7].map(kmap).fillna(-1).astype(int)  # -1 = žetva, nije ocijenjeno
-
-# ---------- referentni mjerni okvir: NDVI prije (10 m) ----------
-with rasterio.open(IDX / "NDVI_prije.tif") as r:
-    T, H, W = r.transform, r.height, r.width
-
-
-def on_grid(path):
-    with rasterio.open(path) as s:
-        d = np.full((H, W), np.nan, np.float32)
-        reproject(rasterio.band(s, 1), d, dst_transform=T, dst_crs=CRS, resampling=Resampling.bilinear,
-                  src_nodata=s.nodata, dst_nodata=np.nan)
-    return d
-
-
-lab = rasterize(((g, i + 1) for i, g in enumerate(par.geometry)), out_shape=(H, W), transform=T, fill=0, dtype="int32")
-n = len(par) + 1
-
-
-def zmean(v):
-    m = ~np.isnan(v) & (lab > 0) & np.isfinite(v)
-    s = np.bincount(lab[m], weights=v[m], minlength=n); c = np.bincount(lab[m], minlength=n)
-    with np.errstate(invalid="ignore", divide="ignore"): return (s / c)[1:]
-
+par["kl"] = par.klasa.astype(int)                       # -1 = žetva, nije ocijenjeno
+par["MEAN"] = par.dNDVI_mean.where(par.dNDVI_count > 0)
+par["udio"] = par.udio_mean.where(par.dNDVI_count > 0)
 
 IND = ["NDVI", "NDRE", "NDMI", "MSAVI2", "PSRI", "BSI"]
-Z = {}
-for ix in IND:
-    for t in ("prije", "poslije"):
-        Z[f"{ix}_{t}"] = zmean(on_grid(IDX / f"{ix}_{t}.tif"))
-    print(ix, "gotovo")
+Z = {f"{ix}_{t}": par[f"{ix}_{t}_mean"].astype(float).values for ix in IND for t in ("prije", "poslije")}
 
-# ---------- druga referenca: samo parcele izvan pojasa tuče ----------
-ok = (par.COUNT > 0) & (par.kl >= 0)
-out_belt = ok & (par.MEAN_1 == 0)
+# ---------- reference: sve ocijenjene oranice (z u QGIS-u) i oranice izvan pojasa tuče ----------
+ok = par.kl >= 0
+mu, sd = float(par.MEAN[ok].mean()), float(par.MEAN[ok].std(ddof=0))
+out_belt = ok & (par.udio == 0)
 med = float(par.MEAN[out_belt].median()); mad = float((par.MEAN[out_belt] - med).abs().median() * 1.4826)
-print(f"referenca studenata: -0,0243 / 0,1851 | izvan pojasa ({out_belt.sum()} parcela): medijan {med:.4f}, MAD {mad:.4f}")
+print(f"referenca sve oranice: {mu:.4f} / {sd:.4f} | izvan pojasa ({out_belt.sum()} parcela): medijan {med:.4f}, MAD {mad:.4f}")
 
 # ---------- gubitak prinosa iz NDVI-ja ----------
 nd0 = Z["NDVI_prije"]
 anom = par.MEAN.values - med
-k = np.where(par.kl.values >= 1, np.clip(-anom / np.maximum(nd0, 0.15), 0, 1), 0.0)
+k = np.where(par.kl.values >= 1, np.clip(-anom / np.maximum(np.nan_to_num(nd0, nan=0.15), 0.15), 0, 1), 0.0)
 k = np.where(par.kl.values < 0, np.nan, k)
 
 # ---------- JLS ----------
@@ -94,11 +66,12 @@ p4 = par.copy(); p4["geometry"] = p4.geometry.simplify(1.0, preserve_topology=Tr
 f = lambda x, d=3: None if x is None or not np.isfinite(x) else round(float(x), d)
 props = []
 for i, r in enumerate(p4.itertuples()):
-    props.append([int(r.id), round(r.area / 1e4, 4), int(r.kl), f(r.z_vrijedno, 2), f(r.MEAN, 4), f(r.MEAN_1, 3), int(r.COUNT),
+    ha = (r.area if r.area and r.area > 0 else par.geometry.iloc[i].area) / 1e4    # površina ARKOD parcele
+    props.append([int(r.id), round(ha, 4), int(r.kl), f(r.z, 2), f(r.MEAN, 4), f(r.udio, 3), int(r.dNDVI_count or 0),
                   r.home_name or "", int(jidx.iloc[i]), f(k[i])] + [f(Z[f"{ix}_{t}"][i]) for ix in IND for t in ("prije", "poslije")])
 fields = ["id", "ha", "kl", "z", "dndvi", "pojas", "npx", "toponim", "j", "k"] + [f"{ix}_{t}" for ix in IND for t in ("prije", "poslije")]
 json.dump({"fields": fields, "scale": 1e5, "jls": jls.JLS_IME_HR.tolist(), "props": props, "geoms": [enc(g) for g in p4.geometry],
-           "ref_studenti": {"med": -0.024262, "sd": 0.18511}, "ref_izvan_pojasa": {"med": med, "mad": mad, "n": int(out_belt.sum())}},
+           "ref_sve": {"med": mu, "sd": sd}, "ref_izvan_pojasa": {"med": med, "mad": mad, "n": int(out_belt.sum())}},
           open(OUT / "parcele.json", "w"), separators=(",", ":"))
 pj = pojas.copy(); pj["geometry"] = pj.geometry.simplify(3, preserve_topology=True); pj = pj.to_crs(4326)
 json.dump({"scale": 1e5, "props": [[round(a / 1e4, 3)] for a in pojas.area], "geoms": [enc(g) for g in pj.geometry]},
@@ -134,7 +107,7 @@ for date, nm in [("20240622", "s2_20240622"), ("20240707", "s2_20240707")]:
     sc = warp_src(scl, resamp=Resampling.nearest)
     stats[f"oblaci_{date}"] = float(np.isin(sc, [3, 8, 9, 10]).sum() / max(1, (~np.isnan(sc)).sum()) * 100)
 
-dn = warp_src(KL / "dNDVI_konacno_bez_zetve.tif", nodata=None)
+dn = warp_src(Q / "dNDVI_oranice_bez_zetve.tif", nodata=-9999)
 v = np.clip(np.nan_to_num(dn) / 0.4, -1, 1)
 red = np.where(v < 0, 215, (1 - v) * 230 + v * 40); grn = np.where(v < 0, (1 + v) * 230 + (-v) * 40, 200 - v * 40)
 blu = np.where(v < 0, (1 + v) * 230 + (-v) * 50, (1 - v) * 230 + v * 60)

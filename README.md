@@ -11,7 +11,7 @@ Rad za Datathon Portala otvorenih podataka 2026, izazov B (Okoliš i održivi pr
 
 ## Što aplikacija radi
 
-- Na karti prikazuje obuhvat poplave i 3.892 ARKOD parcele u kojima je otkrivena voda, obojene po razredu poplavljenosti ili po šteti po hektaru.
+- Na karti prikazuje obuhvat poplave i 3.901 ARKOD parcelu u kojima je otkrivena voda, obojene po razredu poplavljenosti ili po šteti po hektaru.
 - Klik na parcelu ili upis ARKOD ID-a otvara karticu parcele s ovim podacima:
   - vrsta uporabe i poplavljena površina;
   - radarski potpis kroz tri datuma (5. 5., 17. 5. i 29. 5.);
@@ -25,10 +25,10 @@ Rad za Datathon Portala otvorenih podataka 2026, izazov B (Okoliš i održivi pr
 
 ## Alati
 
-Predobrada radarskih snimaka Sentinel-1 rađena je u ESA SNAP-u, a izvorna analiza u ArcGIS Pro. Cijeli postupak zatim je
-ponovljen u otvorenom kodu, u QGIS-u (skripte `pipeline/qgis_poplava.py` i `pipeline/qgis_tuca.py`). Detekcija poplave
-podudara se piksel po piksel, a klase štete od tuče u 98,6 % ocijenjenih parcela (`pipeline/USPOREDBA_QGIS_ARCGIS.md`).
-Za pokretanje i nadogradnju rješenja nije potreban komercijalni softver.
+Sva obrada provedena je u softveru otvorenog koda: predobrada radarskih snimaka Sentinel-1 u ESA SNAP-u, a analiza
+u QGIS-u (skripte `pipeline/qgis_poplava.py` i `pipeline/qgis_tuca.py`) i Pythonu. Postupak je prethodno testiran u
+ArcGIS Pro; obje obrade daju praktički iste rezultate (`pipeline/USPOREDBA_QGIS_ARCGIS.md`). Za korištenje i daljnji
+razvoj rješenja nije potreban komercijalni softver.
 
 ## Struktura
 
@@ -60,30 +60,23 @@ python3 pipeline/qgis_tuca.py <SAFE 22. 6. 2024.> <SAFE 7. 7. 2024.> jls_tuca.gp
 
 Ulazni podaci opisani su u zaglavlju svake skripte.
 
-Izvoz rezultata u web podatke (čita File Geodatabase preko GDAL-a, bez ArcGIS-a):
+Izvoz rezultata iz QGIS-a u web podatke, optička provjera i procjena pouzdanosti:
 
 ```
 pip install -r pipeline/requirements.txt
-python pipeline/izvoz_web_podataka.py "putanja/do/DATATHON_poplave.gdb" docs/data
-```
-
-Optički dio (Sentinel-2 L2A, pojasevi od 20 m: B03, B04, B8A, B11, SCL, TCI):
-
-```
-python pipeline/optika_sentinel2.py "mapa/sa/SAFE/produktima" "putanja/do/DATATHON_poplave.gdb" docs/data
+python pipeline/izvoz_web_podataka.py ulaz_poplava izlaz_poplava docs/data
+python pipeline/optika_sentinel2.py mapa_sa_SAFE_poplava ulaz_poplava izlaz_poplava docs/data
+python pipeline/tuca_web.py izlaz_tuca jls_tuca.gpkg mapa_sa_SAFE_tuca docs/data/tuca
+python pipeline/validacija.py mapa_sa_SAFE_poplava ulaz_poplava izlaz_poplava docs/data izlaz_tuca/pojas_tuce.gpkg
 ```
 
 ## Tuča (Županja, 1. 7. 2024.)
 
 1. Sentinel-2 L2A (T33TYL) 22. 6. i 7. 7. 2024. Indeksi NDVI, NDRE, NDMI, MSAVI2, PSRI i BSI.
-2. Maska žetve (nizak NDVI prije ili golo tlo poslije), pa prag na dNDVI, filtar većine, povezane skupine piksela i poligon pojasa tuče.
-3. ARKOD oranice suzene za 10 m. Zonalna statistika dNDVI-ja i z-vrijednost prema referentnim parcelama. Klase 1–3 za z ≤ −1, −2 i −3.
+2. Maska žetve (nizak NDVI prije ili golo tlo poslije), pa prag dNDVI ≤ −0,05, filtar većine, skupine od najmanje 50 piksela i poligon pojasa tuče.
+3. ARKOD oranice suzene za 10 m. Zonalna statistika dNDVI-ja i z-vrijednost prema svim ocijenjenim oranicama. Klase 1–3 za z ≤ −1, −2 i −3: 971 oranica, 1.935 ha.
 4. Gubitak prinosa iz NDVI-ja u odnosu na oranice izvan pojasa tuče, cijene iz Registra šteta.
 5. Potvrda događaja: European Severe Weather Database (ESWD), tuča 4,5–6,5 cm, 1. 7. 2024. oko 17:10 UTC.
-
-```
-python pipeline/tuca_web.py klase_stete_rez Indeksi_i_delte jls.geojson mapa_sa_SAFE docs/data/tuca
-```
 
 ## Metoda (poplava)
 
@@ -92,7 +85,7 @@ python pipeline/tuca_web.py klase_stete_rez Indeksi_i_delte jls.geojson mapa_sa_
    - VV na dan 17. 5. manji je od −16 dB;
    - pad u odnosu na 5. 5. veći je od 3 dB;
    - porast do 29. 5. veći je od 3 dB.
-3. Maska je pretvorena u poligone, a dijelovi manji od 0,05 ha su uklonjeni. Ostalo je 1.528 poligona, ukupno oko 1.503 ha.
+3. Maska je pretvorena u poligone, a dijelovi manji od 0,05 ha su uklonjeni. Ostalo je 1.574 poligona, ukupno oko 1.505 ha.
 4. Presjek s ARKOD parcelama 2024. daje poplavljenu površinu, postotak i razred za svaku parcelu:
    - 1: do 25 %;
    - 2: 25–50 %;
@@ -112,7 +105,7 @@ python pipeline/tuca_web.py klase_stete_rez Indeksi_i_delte jls.geojson mapa_sa_
 Bez terenskog očevida pouzdanost se procjenjuje neovisnim mjerenjima (`pipeline/validacija.py`, rezultat u `docs/data/validacija.json`, prikaz u kartici **Pouzdanost**):
 
 - **Poplava:** radar (Sentinel-1) prema optici (Sentinel-2, 22. 5.) po parcelama daje preciznost 87 % i kappa 0,51, a po pikselima kappa 0,35, jer se voda u međuvremenu povlačila. Osjetljivost na prag: od 908 ha (strogo) do 2.579 ha (blago).
-- **Tuča:** NDVI se slaže s neovisnim indeksima NDRE (kappa 0,85) i NDMI (kappa 0,73). Najveća nesigurnost je izbor referentnih parcela: 1.971 ha i 1,6 mil. € (studenti, konzervativno) prema 5.383 ha i 3,1 mil. € (referenca izvan pojasa). Prijava tuče iz ESWD-a nalazi se 340 m od pojasa tuče.
+- **Tuča:** NDVI se slaže s neovisnim indeksima NDRE (kappa 0,85) i NDMI (kappa 0,77). Najosjetljiviji je izbor referentnih parcela: 1.935 ha i 1,6 mil. € (sve oranice, konzervativno) prema 5.337 ha i 3,0 mil. € (oranice izvan pojasa). Prijava tuče iz ESWD-a nalazi se 331 m od pojasa tuče.
 - Aplikacija izvozi stratificirani slučajni uzorak parcela za terensku provjeru. Iz njega nastaje prava matrica konfuzije.
 
 ## Otvoreni podaci

@@ -1,54 +1,27 @@
 """
-Izvoz rezultata ArcGIS Pro analize poplave (DATATHON_poplave.gdb) u lagane web formate
-za aplikaciju u mapi docs/. Radi bez ArcGIS-a: čita File Geodatabase izravno (GDAL/OpenFileGDB
-za vektore, vlastiti čitač blokova za rastere).
+Izvoz rezultata analize poplave iz QGIS-a (qgis_poplava.py) u lagane web formate za aplikaciju u mapi docs/.
 
 Pokretanje:
     pip install geopandas pyogrio rasterio pillow pyproj numpy
-    python izvoz_web_podataka.py "putanja/do/DATATHON_poplave.gdb" ../docs/data
+    python izvoz_web_podataka.py <ulaz_poplava> <izlaz_poplava> ../docs/data
+
+<ulaz_poplava>: S1A_VV_{05,17,29}052023_dB.tif (ESA SNAP), jls_podrucje.gpkg (DGU), vodotoci.gpkg (Hrvatske vode)
+<izlaz_poplava>: ARKOD_2024_poplava.gpkg i poplava_poligoni_005ha.gpkg iz qgis_poplava.py
 
 Licencija: EUPL-1.2
 """
-import json, sys, zlib, pathlib
+import json, sys, pathlib
 import numpy as np, pyogrio, geopandas as gpd
 import rasterio
 from rasterio.warp import reproject, Resampling, calculate_default_transform
-from rasterio.transform import from_origin
 from PIL import Image
 from pyproj import Transformer
 
-GDB = pathlib.Path(sys.argv[1]); OUT = pathlib.Path(sys.argv[2]); OUT.mkdir(parents=True, exist_ok=True)
+sys.path.insert(0, str(pathlib.Path(__file__).parent))
+from izvoz_web_podataka_lib import qgis_poplava  # noqa: E402
+
+ULAZ, QOUT, OUT = map(pathlib.Path, sys.argv[1:4]); OUT.mkdir(parents=True, exist_ok=True)
 SRC_CRS = "EPSG:3765"  # HTRS96/TM
-
-
-def table_ids():
-    """Ime sloja -> datoteka aXXXXXXXX u .gdb mapi (iz GDB_SystemCatalog)."""
-    cat = pyogrio.read_dataframe(GDB / "a00000001.gdbtable", read_geometry=False, fid_as_index=True)
-    return {r.Name: f"a{fid:08x}" for fid, r in cat.iterrows()}
-
-
-IDS = table_ids()
-vec = lambda name: pyogrio.read_dataframe(GDB / f"{IDS[name]}.gdbtable")
-
-
-def read_raster(name, dtype=">f4"):
-    """Čita rastersku traku iz fras_bnd/fras_blk tablica (blokovi 128x128, zlib ili nekomprimirano)."""
-    b = pyogrio.read_dataframe(GDB / f"{IDS['fras_bnd_' + name]}.gdbtable", read_geometry=False).iloc[0]
-    W, H, bw, bh = int(b.band_width), int(b.band_height), int(b.block_width), int(b.block_height)
-    dt = np.dtype(dtype); n = bw * bh * dt.itemsize
-    arr = np.full((-(-H // bh) * bh, -(-W // bw) * bw), np.nan, np.float32)
-    blk = pyogrio.read_dataframe(GDB / f"{IDS['fras_blk_' + name]}.gdbtable", read_geometry=False)
-    for r, c, d in zip(blk.row_nbr[blk.rrd_factor == 0], blk.col_nbr[blk.rrd_factor == 0], blk.block_data[blk.rrd_factor == 0]):
-        if d is None: continue
-        if d[:2] == b"\x78\x9c": d = zlib.decompress(d)
-        v = np.frombuffer(d[:n], dt).reshape(bh, bw).astype(np.float32)
-        if len(d) > n:  # bitmaska valjanih piksela
-            m = np.unpackbits(np.frombuffer(d[n:n + bw * bh // 8], np.uint8)).reshape(bh, bw)
-            v[m == 0] = np.nan
-        arr[r * bh:(r + 1) * bh, c * bw:(c + 1) * bw] = v
-    # eminx/emaxy su središta rubnih piksela
-    cs = (b.emaxx - b.eminx) / (W - 1)
-    return arr[:H, :W], from_origin(b.eminx - cs / 2, b.emaxy + cs / 2, cs, cs)
 
 
 def enc_geom(geom, scale=1e5):
@@ -65,38 +38,36 @@ def enc_geom(geom, scale=1e5):
 
 
 # ---------- vektori ----------
-par = vec("ARKOD_2024_ekonomski_scenarij")
-jls = vec("podrucje_istrazivanja")[["JLS_IME_HR", "geometry"]]
+_, _, VV, par = qgis_poplava(ULAZ, QOUT)
+jls = pyogrio.read_dataframe(ULAZ / "jls_podrucje.gpkg")[["JLS_IME_HR", "geometry"]]
 pts = par[["id", "geometry"]].copy(); pts["geometry"] = par.geometry.representative_point()
 jmap = gpd.sjoin(pts, jls, how="left", predicate="within").index_right.fillna(-1).astype(int)
 
 par["geometry"] = par.geometry.simplify(1.5, preserve_topology=True)
 par = par.to_crs(4326)
-par["fha"] = par.SUM_poplava_ha_1.fillna(0)
 props, geoms = [], []
 for i, r in par.iterrows():
     f = r.fha > 0
     props.append([int(r.id), int(r.land_use_i), round(r.ARKOD_ha, 4), round(r.fha, 4) if f else 0,
-                  round(r.posto_poplavljenosti_filtri or 0, 1) if f else 0, int(r.razred_poplavljenost) if f else 0,
+                  round(r.posto_poplavljenosti or 0, 1) if f else 0, int(r.razred_poplavljenosti) if f else 0,
                   r.home_name or "", int(jmap.loc[i])])
     geoms.append(enc_geom(r.geometry))
 json.dump({"fields": ["id", "lu", "ha", "fha", "pct", "r", "toponim", "j"], "scale": 1e5,
            "jls": jls.JLS_IME_HR.tolist(), "props": props, "geoms": geoms},
           open(OUT / "parcele.json", "w"), separators=(",", ":"))
 
-pop = vec("S1A_VV_17_5_23_poplava_vremenska_poligoni_filtrirano_005ha")
+pop = pyogrio.read_dataframe(QOUT / "poplava_poligoni_005ha.gpkg")
 pop["geometry"] = pop.geometry.simplify(2, preserve_topology=True); pop = pop.to_crs(4326)
 json.dump({"scale": 1e5, "props": [[round(x, 3)] for x in pop.povrsina_ha], "geoms": [enc_geom(g) for g in pop.geometry]},
           open(OUT / "poplava.json", "w"), separators=(",", ":"))
 
 j4 = jls.to_crs(4326); j4["geometry"] = j4.geometry.simplify(0.0002)
 j4.to_file(OUT / "jls.geojson", driver="GeoJSON", COORDINATE_PRECISION=5)
-riv = vec("Kupa_Korana_Dobra_Mreznica").to_crs(4326); riv["geometry"] = riv.geometry.simplify(0.0001)
+riv = pyogrio.read_dataframe(ULAZ / "vodotoci.gpkg").to_crs(4326); riv["geometry"] = riv.geometry.simplify(0.0001)
 riv[["geometry"]].to_file(OUT / "rijeke.geojson", driver="GeoJSON", COORDINATE_PRECISION=5)
 
 # ---------- rasteri Sentinel-1 ----------
-names = {"v05": "S1A_VV_5_5_23_izrezano_dB", "v17": "S1A_VV_17_5_23_izrezano_dB", "v29": "S1A_VV_29_5_23_izrezano_dB"}
-R = {k: read_raster(v) for k, v in names.items()}
+R = {"v05": VV["05"], "v17": VV["17"], "v29": VV["29"]}
 ref, rt = R["v17"]; H, W = ref.shape
 left, top = rt.c, rt.f; right, bottom = left + W * rt.a, top + H * rt.e
 

@@ -14,14 +14,16 @@ Pokretanje (QGIS 3.28 ili noviji):
 
 Koraci (isti kao u izvornoj analizi):
   1. Područje: JLS + pojas od 5 km. Mreža 10 m u HTRS96/TM.
-  2. Za oba datuma: refleksija (DN - 1000) / 10000, B11 bilinearno na 10 m, maska SCL (samo 4 vegetacija i 5 golo tlo),
-     NDVI = (B08 - B04) / (B08 + B04), NDVI > 1 se odbacuje; za 7. 7. i BSI = ((B11 + B04) - (B08 + B02)) / ((B11 + B04) + (B08 + B02)).
+  2. Za oba datuma: refleksija (DN - 1000) / 10000, kanali od 20 m bilinearno na 10 m, maska SCL (samo 4 vegetacija
+     i 5 golo tlo) i šest indeksa: NDVI (B08, B04; NDVI > 1 se odbacuje), NDRE (B8A, B05), NDMI (B08, B11),
+     PSRI ((B04 - B02) / B06), MSAVI2 (B08, B04) i BSI ((B11 + B04) - (B08 + B02)) / ((B11 + B04) + (B08 + B02)).
   3. dNDVI = NDVI(7. 7.) - NDVI(22. 6.).
   4. Maska žetve: NDVI(22. 6.) < 0,4  ili  (NDVI(7. 7.) < 0,25 i BSI(7. 7.) > 0,1). Ti pikseli se ne ocjenjuju.
   5. Oranice suzene za 10 m (rubni pikseli), dNDVI samo unutar njih.
   6. Pojas tuče: dNDVI <= -0,05, filtar većine 3 x 3 (8 susjeda), skupine povezanih piksela (8 susjeda), odbacivanje
      skupina manjih od 50 piksela, pretvorba u poligone.
-  7. Zonalna statistika po parceli (srednja vrijednost, st. devijacija, broj piksela dNDVI; udio piksela ispod praga).
+  7. Zonalna statistika po parceli (srednja vrijednost, st. devijacija, broj piksela dNDVI; udio piksela ispod praga;
+     srednja vrijednost svakog indeksa prije i poslije).
   8. z = (MEAN - srednja vrijednost svih ocijenjenih parcela) / st. devijacija; klase 1, 2, 3 za z <= -1, -2, -3.
      Parcele bez ijednog valjanog piksela: "nije ocijenjeno - žetva".
 """
@@ -87,20 +89,29 @@ def main(safe_prije, safe_poslije, jls, arkod, izlaz, unutarnji_pojas=-10.0):
         for k, v in ulazi.items(): p[f"INPUT_{k}"] = v; p[f"BAND_{k}"] = 1
         return run("gdal:rastercalculator", **p)["OUTPUT"]
 
-    # 2. indeksi za oba datuma
-    I = {}
+    # 2. indeksi za oba datuma (refleksija, maska SCL: samo 4 vegetacija i 5 golo tlo)
+    I, IX = {}, {}
     for kad, safe in (("prije", safe_prije), ("poslije", safe_poslije)):
-        b = {k: na_mrezu(kanal(safe, k), f"{kad}_{k}.tif", 1 if k == "B11" else 0) for k in ("B02", "B04", "B08", "B11")}
+        b = {k: na_mrezu(kanal(safe, k), f"{kad}_{k}.tif", 0 if k in ("B02", "B04", "B08") else 1)
+             for k in ("B02", "B04", "B05", "B06", "B08", "B8A", "B11")}
         scl = na_mrezu(kanal(safe, "SCL"), f"{kad}_SCL.tif", 0)
         r = lambda X: f"(({X} - 1000.0) / 10000.0)"
-        ok = "((E == 4) | (E == 5)) & (A > 0) & (B > 0)"
-        ndvi = calc(f"NDVI_{kad}.tif",
-                    f"where({ok}, where(({r('B')} - {r('A')}) / ({r('B')} + {r('A')}) <= 1, ({r('B')} - {r('A')}) / ({r('B')} + {r('A')}), {ND}), {ND})",
+        ok = lambda *xs: "((E == 4) | (E == 5))" + "".join(f" & ({x} > 0)" for x in xs)
+        nd = lambda a, b_: f"({r(a)} - {r(b_)}) / ({r(a)} + {r(b_)})"
+        ndvi = calc(f"NDVI_{kad}.tif", f"where({ok('A', 'B')}, where({nd('B', 'A')} <= 1, {nd('B', 'A')}, {ND}), {ND})",
                     A=b["B04"], B=b["B08"], E=scl)
         bsi = calc(f"BSI_{kad}.tif",
-                   f"where({ok} & (C > 0) & (D > 0), (({r('C')} + {r('A')}) - ({r('B')} + {r('D')})) / (({r('C')} + {r('A')}) + ({r('B')} + {r('D')})), {ND})",
+                   f"where({ok('A', 'B', 'C', 'D')}, (({r('C')} + {r('A')}) - ({r('B')} + {r('D')})) / (({r('C')} + {r('A')}) + ({r('B')} + {r('D')})), {ND})",
                    A=b["B04"], B=b["B08"], C=b["B11"], D=b["B02"], E=scl)
+        ndre = calc(f"NDRE_{kad}.tif", f"where({ok('A', 'B')}, {nd('A', 'B')}, {ND})", A=b["B8A"], B=b["B05"], E=scl)
+        ndmi = calc(f"NDMI_{kad}.tif", f"where({ok('A', 'B')}, {nd('A', 'B')}, {ND})", A=b["B08"], B=b["B11"], E=scl)
+        psri = calc(f"PSRI_{kad}.tif", f"where({ok('A', 'B', 'C')}, ({r('A')} - {r('B')}) / {r('C')}, {ND})",
+                    A=b["B04"], B=b["B02"], C=b["B06"], E=scl)
+        msavi = calc(f"MSAVI2_{kad}.tif",
+                     f"where({ok('A', 'B')}, (2 * {r('B')} + 1 - sqrt(maximum((2 * {r('B')} + 1) ** 2 - 8 * ({r('B')} - {r('A')}), 0))) / 2, {ND})",
+                     A=b["B04"], B=b["B08"], E=scl)
         I[kad] = (ndvi, bsi)
+        IX.update({f"NDVI_{kad}": ndvi, f"NDRE_{kad}": ndre, f"NDMI_{kad}": ndmi, f"MSAVI2_{kad}": msavi, f"PSRI_{kad}": psri, f"BSI_{kad}": bsi})
 
     # 3.-4. dNDVI bez žetve
     v = lambda X: f"({X} > -9000)"
@@ -139,7 +150,11 @@ def main(safe_prije, safe_poslije, jls, arkod, izlaz, unutarnji_pojas=-10.0):
     par = run("native:zonalstatisticsfb", INPUT=oranice, INPUT_RASTER=dnd_or, RASTER_BAND=1, COLUMN_PREFIX="dNDVI_",
               STATISTICS=[0, 2, 4], OUTPUT="TEMPORARY_OUTPUT")["OUTPUT"]           # count, mean, std
     par = run("native:zonalstatisticsfb", INPUT=par, INPUT_RASTER=prag, RASTER_BAND=1, COLUMN_PREFIX="udio_",
-              STATISTICS=[2], OUTPUT=tmp("oranice_statistika.gpkg"))["OUTPUT"]     # udio piksela ispod praga
+              STATISTICS=[2], OUTPUT="TEMPORARY_OUTPUT")["OUTPUT"]                 # udio piksela ispod praga
+    for ime, ras in IX.items():                                                     # srednja vrijednost svakog indeksa
+        par = run("native:zonalstatisticsfb", INPUT=par, INPUT_RASTER=ras, RASTER_BAND=1, COLUMN_PREFIX=f"{ime}_",
+                  STATISTICS=[2], OUTPUT="TEMPORARY_OUTPUT")["OUTPUT"]
+    par = run("native:savefeatures", INPUT=par, OUTPUT=tmp("oranice_statistika.gpkg"))["OUTPUT"]
 
     # 8. z-vrijednost i klase
     L = QgsVectorLayer(par, "p")
