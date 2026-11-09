@@ -168,7 +168,7 @@ def main(safe_prije, safe_poslije, jls, arkod, izlaz, unutarnji_pojas=-10.0):
         for f, m in zip(L.getFeatures(), mean):
             if np.isnan(m): z, k, txt = None, -1, "nije ocijenjeno – žetva"
             else:
-                z = (m - mu) / sd; k = 3 if z <= -3 else 2 if z <= -2 else 1 if z <= -1 else 0
+                z = float((m - mu) / sd); k = 3 if z <= -3 else 2 if z <= -2 else 1 if z <= -1 else 0
                 txt = ["Klasa 0 – bez izdvojenog pada", "Klasa 1 – moguća šteta", "Klasa 2 – vjerojatna šteta", "Klasa 3 – jaka šteta"][k]
             L.changeAttributeValues(f.id(), {iz: z, ik: k, it: txt})
     run("native:savefeatures", INPUT=L, OUTPUT=tmp("ARKOD_oranice_klase_stete.gpkg"))
