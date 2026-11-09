@@ -551,9 +551,10 @@ function mkBase(key){
   else if(key==="v17")l=img("sar_1705.webp");
   else if(key==="v29")l=img("sar_2905.webp");
   else if(key==="dof")l=wms("https://geoportal.dgu.hr/services/inspire/orthophoto_2024/wms","OI.OrthoimageCoverage",{transparent:false,format:"image/jpeg",attribution:"DOF 2024 © Državna geodetska uprava"});
+  else if(key==="dof23")l=wms("https://geoportal.dgu.hr/services/inspire/orthophoto_2023/wms","OI.OrthoimageCoverage",{transparent:false,format:"image/jpeg",attribution:"DOF 2023 © Državna geodetska uprava"});
   else if(key==="osm")l=L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"});
   else if(key==="esri")l=L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:19,attribution:"Esri, Maxar, Earthstar Geographics"});
-  if(l&&l.on)l.on("tileerror",()=>{if(!extFail&&curBase===l){extFail=true;toast("Vanjska podloga trenutno nije dostupna. Prikazujem satelitsku snimku Sentinel-2.");$("base").value="s2b";setBase("s2b");}});
+  if(l&&l.on)l.on("tileerror",()=>{if(!extFail&&curBase===l){extFail=true;toast("Vanjska podloga trenutno nije dostupna. Prikazujem satelitsku snimku Sentinel-2.");const fb=HZ==="tuca"?"t07":"s2b";$("base").value=fb;setBase(fb);}});
   return bases[key]=l||null;
 }
 function setBase(key){
@@ -899,7 +900,7 @@ function loadHail(){
   return tLoaded;
 }
 const BASES={poplava:[["s2b","Sentinel-2, 22. 5. 2023. (poslije poplave)"],["s2a","Sentinel-2, 5. 5. 2023. (prije poplave)"],["s2n","Sentinel-2, 12. 5. 2022. (normalna godina)"],["rgb","Sentinel-1 kompozit promjene (5.5. / 17.5.)"],["v05","Sentinel-1 VV, 5. 5. 2023. (prije)"],["v17","Sentinel-1 VV, 17. 5. 2023. (poplava)"],["v29","Sentinel-1 VV, 29. 5. 2023. (povlačenje)"],["dof","DGU digitalni ortofoto 2024 (WMS)"],["osm","OpenStreetMap"],["esri","Esri satelitska podloga"],["none","Bez podloge"]],
-  tuca:[["t07","Sentinel-2, 7. 7. 2024. (poslije tuče)"],["t22","Sentinel-2, 22. 6. 2024. (prije tuče)"],["dof","DGU digitalni ortofoto 2024 (WMS)"],["osm","OpenStreetMap"],["esri","Esri satelitska podloga"],["none","Bez podloge"]]};
+  tuca:[["t07","Sentinel-2, 7. 7. 2024. (poslije tuče)"],["t22","Sentinel-2, 22. 6. 2024. (prije tuče)"],["dof23","DGU digitalni ortofoto 2023 (WMS)"],["osm","OpenStreetMap"],["esri","Esri satelitska podloga"],["none","Bez podloge"]]};
 const HZTXT={poplava:{d:"Poplava Kupe i Korane, svibanj 2023. Karlovac, Duga Resa, Barilović, Lasinja i pojas od 3 km. Sentinel-1 i Sentinel-2.",kl:["ha poplavljeno unutar ARKOD parcela","pogođenih ARKOD parcela","ha ukupni obuhvat poplave","udio poplavljene ARKOD površine"],loss:"Gubitak prinosa na poplavljenom dijelu",cls:"Parcele po razredu poplavljenosti",lu:"Po vrsti uporabe zemljišta",q:"ARKOD ID, npr. 3593093"},
   tuca:{d:"Tuča 1. 7. 2024., Gradište, Županja i Štitar. Sentinel-2 prije (22. 6.) i poslije (7. 7. 2024.), ARKOD oranice.",kl:["ha oranica u klasama štete 1–3","oštećenih ARKOD oranica","ha pojas tuče (dNDVI)","udio oštećene površine u ocijenjenim oranicama"],loss:"Gubitak prinosa na oštećenim oranicama",cls:"Oranice po klasi štete",lu:"Po klasi štete",q:"ARKOD ID, npr. 3143495"}};
 function setHazard(h){
