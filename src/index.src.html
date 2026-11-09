@@ -538,9 +538,9 @@ function wms(url,layers,opts){return L.tileLayer.wms(url,Object.assign({layers,f
 function mkBase(key){
   if(bases[key])return bases[key];
   const B=rasterMeta.bounds;let l;
-  const img=f=>L.imageOverlay("data/"+f,B,{pane:"sar",interactive:false,attribution:"Copernicus Sentinel-1 (ESA), obrada: tim Datathon 2026"});
-  const img2=f=>L.imageOverlay("data/"+f,B,{pane:"sar",interactive:false,attribution:"Copernicus Sentinel-2 (ESA), obrada: tim Datathon 2026"});
-  const img3=f=>L.imageOverlay("data/tuca/"+f,TMETA.bounds,{pane:"sar",interactive:false,attribution:"Copernicus Sentinel-2 (ESA), obrada: tim Datathon 2026"});
+  const img=f=>L.imageOverlay("data/"+f,B,{pane:"sar",interactive:false,attribution:"Contains modified Copernicus Sentinel data 2023 · obrada: GEOtim2"});
+  const img2=f=>L.imageOverlay("data/"+f,B,{pane:"sar",interactive:false,attribution:"Contains modified Copernicus Sentinel data 2022–2023 · obrada: GEOtim2"});
+  const img3=f=>L.imageOverlay("data/tuca/"+f,TMETA.bounds,{pane:"sar",interactive:false,attribution:"Contains modified Copernicus Sentinel data 2024 · obrada: GEOtim2"});
   if(key==="t07")l=img3("s2_20240707.webp");
   else if(key==="t22")l=img3("s2_20240622.webp");
   else if(key==="s2b")l=img2("s2_20230522.webp");
